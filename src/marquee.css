@@ -1,0 +1,78 @@
+.marquee-container {
+  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.marquee-container h1 {
+  color: #000;
+  text-align: center;
+  max-width: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  display: flex;
+  position: static;
+}
+
+.horizontal-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  width: 480px;
+  height: 60px; /* Adjust according to the icon size */
+}
+
+.horizontal-carousel-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  animation: marquee 20s linear infinite;
+}
+
+.icon-container {
+  border-radius: 13px;
+  width: 40px;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.06);
+  margin: 0 8px;
+}
+
+.gradient-left {
+  background-image: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0));
+  width: 64px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.gradient-right {
+  background-image: linear-gradient(270deg, #fff, rgba(255, 255, 255, 0));
+  width: 64px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media(max-width:768px){
+    .horizontal-carousel{
+        width: 90%;
+    }
+}

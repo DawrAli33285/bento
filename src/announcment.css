@@ -1,0 +1,21 @@
+.banner-container {
+  width: 100%;
+  z-index: 3;
+  grid-column-gap: 12px;
+  background-color: #768cff;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+  top: 0;
+}
+.text-banner {
+  color: #fff;
+  padding-top: 2px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
