@@ -11,7 +11,9 @@ export default function HeroSection() {
       };
       
         const springConfig = {
-duration:0.5
+            stiffness: 80,
+            damping: 50,
+            restDelta: 0.001,
           
         };
       
