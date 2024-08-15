@@ -10,9 +10,7 @@ export default function HeroSection() {
         return useSpring(transform, springConfig);
       };
       const springConfig = {
-        stiffness: 250,  
-        damping: 120,     
-      
+      duration:0.5  
     };
       let { scrollY } = useScroll();
       
