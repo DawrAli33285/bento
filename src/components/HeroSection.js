@@ -10,11 +10,10 @@ export default function HeroSection() {
         return useSpring(transform, springConfig);
       };
       const springConfig = {
-        stiffness: 120,  // Increased for a snappier animation
-        damping: 70,     // Increased to reduce the bounce
-        restDelta: 0.001,
-    };
+        stiffness: 250,  
+        damping: 120,     
       
+    };
       let { scrollY } = useScroll();
       
       const negativeMargintwo = useCreateSpring(scrollY, [30, 350], [0, -100], easeIn, springConfig);
