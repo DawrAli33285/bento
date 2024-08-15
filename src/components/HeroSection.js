@@ -4,7 +4,13 @@ import { cubicBezier, circOut,easeIn,animate} from "framer-motion"
 import { useEffect, useRef,useState } from "react";
 export default function HeroSection() {
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     const useCreateSpring = (scrollY, inputRange, outputRange, ease, springConfig) => {
         const transform = useTransform(scrollY, inputRange, outputRange, { ease });
         return useSpring(transform, springConfig);
@@ -170,7 +176,10 @@ export default function HeroSection() {
                     className="image-square"
                 />
             </motion.div>
-            <motion.div style={{opacity:opaictyChangetwo}} className="hero-content">
+            <motion.div
+            style={{ opacity: !isMobile ? opaictyChangetwo: 1 }} 
+            className="hero-content"
+        >
                 <motion.div   initial={{opacity:0,rotate:-30,filter:'blur(4px)'}} 
                    animate={{opacity:1,rotate:0,filter:'blur(0px)'}} 
                    transition={{ duration: 0.5 ,ease:'linear',delay:1}} 
