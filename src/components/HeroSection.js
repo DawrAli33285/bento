@@ -9,9 +9,14 @@ export default function HeroSection() {
         const transform = useTransform(scrollY, inputRange, outputRange, { ease });
         return useSpring(transform, springConfig);
       };
-      const springConfig = {
-      duration:0.5  
-    };
+      
+        const springConfig = {
+            stiffness: 80,
+            damping: 50,
+            restDelta: 0.001,
+          
+        };
+      
       let { scrollY } = useScroll();
       
       const negativeMargintwo = useCreateSpring(scrollY, [30, 350], [0, -100], easeIn, springConfig);
