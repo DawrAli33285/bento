@@ -1,6 +1,7 @@
 import "../familiar.css";
 
 export default function FamiliarFaces() {
+    
     return (
         <div className="familiar-faces-wrapper">
             <h4>Join thousands of inspiring creatives</h4>
@@ -8,6 +9,9 @@ export default function FamiliarFaces() {
                 {[...Array(10)].map((_, index) => (
                     <a href="#" className="avatar" key={index}>
                         <div className="avatar-overlay">
+                            <div className="name-container">
+                                Josh Blue
+                            </div>
                             <img
                                 src="https://cdn.prod.website-files.com/6335b33630f88833a92915fc/63e5704bcb847d3c76e67a52_l8mvVzVMjCWFcPLY-rogie-avatar.png"
                                 loading="lazy"
