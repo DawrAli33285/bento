@@ -9,13 +9,11 @@ export default function HeroSection() {
         const transform = useTransform(scrollY, inputRange, outputRange, { ease });
         return useSpring(transform, springConfig);
       };
-      
-        const springConfig = {
-            stiffness: 80,
-            damping: 50,
-            restDelta: 0.001,
-          
-        };
+      const springConfig = {
+        stiffness: 120,  // Increased for a snappier animation
+        damping: 70,     // Increased to reduce the bounce
+        restDelta: 0.001,
+    };
       
       let { scrollY } = useScroll();
       
