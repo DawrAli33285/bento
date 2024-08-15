@@ -11,8 +11,8 @@ export default function HeroSection() {
       };
       
         const springConfig = {
-            stiffness: 60,
-            damping: 60,
+            stiffness: 80,
+            damping: 50,
             restDelta: 0.001,
           
         };
@@ -173,14 +173,14 @@ export default function HeroSection() {
             <motion.div style={{opacity:opaictyChangetwo}} className="hero-content">
                 <motion.div   initial={{opacity:0,rotate:-30,filter:'blur(4px)'}} 
                    animate={{opacity:1,rotate:0,filter:'blur(0px)'}} 
-                   transition={{ duration: 1 ,ease:'linear',delay:1}} 
+                   transition={{ duration: 0.5 ,ease:'linear',delay:1}} 
                    style={{ position: 'relative',marginTop:'5rem'}} >
                     <img width={90} height={95} src="https://cdn.prod.website-files.com/6335b33630f88833a92915fc/63e501246a370e0d4462f2ed_herologo.png"></img>
                 </motion.div>
                 <motion.h2 
                   initial={{opacity:0,filter:'blur(4px)'}} 
                   animate={{opacity:1,filter:'blur(0px)'}} 
-                  transition={{ duration: 1 ,ease:'linear',delay:2}} 
+                  transition={{ duration: 1 ,ease:'linear',delay:1.3}} 
                   style={{ position: 'relative'}} 
                 >Bento</motion.h2>
                 <motion.div
