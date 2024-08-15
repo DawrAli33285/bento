@@ -1,26 +1,40 @@
 import "../hero.css";
-import { useScroll,motion,useMotionValueEvent,useTransform} from "framer-motion";
-import { cubicBezier, circOut,easeIn} from "framer-motion"
+import { useScroll,motion,useMotionValueEvent,useTransform,useSpring} from "framer-motion";
+import { cubicBezier, circOut,easeIn,animate} from "framer-motion"
 import { useEffect, useRef,useState } from "react";
 export default function HeroSection() {
 
 
-let {scrollY}=useScroll()
-let negativeMargin = useTransform(scrollY, [30, 350], [0, -100], { ease: easeIn });
-let firstRotate= useTransform(scrollY, [50, 350], [0, 48],{ease:easeIn});
-let secondRotate=useTransform(scrollY,[100,350],[-2,-5],{ease:easeIn})
-let secondMarginX=useTransform(scrollY,[50,350],[-120,-200],{ease:easeIn})
-let secondMarginy=useTransform(scrollY,[50,350],[0,-200],{ease:easeIn})
-let opaictyChange=useTransform(scrollY,[50,300],[1,0],{ease:easeIn})
-let thirdCard=useTransform(scrollY,[80,450],[0,90],{ease:easeIn})
-let thirdMargin = useTransform(scrollY, [80, 350], [120, 200],{ease:easeIn});
-let thirdXMargin= useTransform(scrollY, [100, 350], [0, -150],{ease:easeIn});
-let fourthCardXMargin=useTransform(scrollY, [0, 350], [0, -200],{ease:easeIn});
-let fourthCardYMargin=useTransform(scrollY, [0, 350], [0, 200],{ease:easeIn});
-let fourthCardRotate=useTransform(scrollY, [50, 350], [0, 48],{ease:easeIn});
-let fifthCardXMargin=useTransform(scrollY, [0, 350], [0, -200],{ease:easeIn});
-let fifthCardYMargin=useTransform(scrollY, [0, 350], [0, -200],{ease:easeIn});
-let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
+    const useCreateSpring = (scrollY, inputRange, outputRange, ease, springConfig) => {
+        const transform = useTransform(scrollY, inputRange, outputRange, { ease });
+        return useSpring(transform, springConfig);
+      };
+      
+        const springConfig = {
+            stiffness: 60,
+            damping: 60,
+            restDelta: 0.001,
+          
+        };
+      
+      let { scrollY } = useScroll();
+      
+      const negativeMargintwo = useCreateSpring(scrollY, [30, 350], [0, -100], easeIn, springConfig);
+      const firstRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
+      const secondRotatetwo = useCreateSpring(scrollY, [100, 350], [-2, -5], easeIn, springConfig);
+      const secondMarginXtwo = useCreateSpring(scrollY, [50, 350], [-120, -200], easeIn, springConfig);
+      const secondMarginytwo = useCreateSpring(scrollY, [50, 350], [0, -200], easeIn, springConfig);
+      const opaictyChangetwo = useCreateSpring(scrollY, [50, 300], [1, 0], easeIn, springConfig);
+      const thirdCardtwo = useCreateSpring(scrollY, [80, 450], [0, 90], easeIn, springConfig);
+      const thirdMargintwo = useCreateSpring(scrollY, [80, 350], [120, 200], easeIn, springConfig);
+      const thirdXMargintwo = useCreateSpring(scrollY, [100, 350], [0, -150], easeIn, springConfig);
+      const fourthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fourthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, 200], easeIn, springConfig);
+      const fourthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
+      const fifthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fifthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fifthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, -48], easeIn, springConfig);
+      
 // const [animationValue,setAnimationValue]=useState(0)
 // useMotionValueEvent(scrollYProgress,'change',(value)=>{
 // setAnimationValue((prev)=>{
@@ -36,11 +50,11 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
             
                 data-w-id="83a845c0-47bc-de00-f286-0c82adad98ce"
                 style={{
-                    margin:negativeMargin,
-                    rotate:firstRotate,
+                    margin:negativeMargintwo,
+                    rotate:firstRotatetwo,
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity:opaictyChange,
+                    opacity:opaictyChangetwo,
                    
                    
                 }}
@@ -64,10 +78,10 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
                    
                 data-w-id="468c03c8-c19e-776f-4a11-465a0ac15831"
                 style={{
-                   rotate:secondRotate,
-                   opacity:opaictyChange,
-                   marginLeft:secondMarginX,
-                   marginTop:secondMarginy,
+                   rotate:secondRotatetwo,
+                   opacity:opaictyChangetwo,
+                   marginLeft:secondMarginXtwo,
+                   marginTop:secondMarginytwo,
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-2deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
                   
@@ -92,10 +106,10 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChange,
-                    rotate:thirdCard,
-                    marginTop:thirdMargin,
-                    marginLeft:thirdXMargin
+                    opacity: opaictyChangetwo,
+                    rotate:thirdCardtwo,
+                    marginTop:thirdMargintwo,
+                    marginLeft:thirdXMargintwo
                 }}
                 className="widget-parent-3"
             >
@@ -115,10 +129,10 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChange,
-                    rotate:fifthCardRotate,
-                    marginTop:fifthCardYMargin,
-                    marginRight:fifthCardXMargin
+                    opacity: opaictyChangetwo,
+                    rotate:fifthCardRotatetwo,
+                    marginTop:fifthCardYMargintwo,
+                    marginRight:fifthCardXMargintwo
                 }}
                 className="widget-parent-4"
             >
@@ -140,10 +154,10 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChange,
-                    rotate:fourthCardRotate,
-                    marginRight:fourthCardXMargin,
-                    marginTop:fourthCardYMargin
+                    opacity: opaictyChangetwo,
+                    rotate:fourthCardRotatetwo,
+                    marginRight:fourthCardXMargintwo,
+                    marginTop:fourthCardYMargintwo
                 }}
                 className="widget-parent-5"
             >
@@ -156,7 +170,7 @@ let fifthCardRotate=useTransform(scrollY, [50, 350], [0, -48],{ease:easeIn});
                     className="image-square"
                 />
             </motion.div>
-            <motion.div style={{opacity:opaictyChange}} className="hero-content">
+            <motion.div style={{opacity:opaictyChangetwo}} className="hero-content">
                 <motion.div   initial={{opacity:0,rotate:-30,filter:'blur(4px)'}} 
                    animate={{opacity:1,rotate:0,filter:'blur(0px)'}} 
                    transition={{ duration: 1 ,ease:'linear',delay:1}} 
