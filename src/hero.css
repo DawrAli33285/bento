@@ -3,7 +3,7 @@
   justify-content: flex-start;
   align-items: center;
   width: 100vw;
-  height: 50vh;
+  height: 300px;
   position: relative;
   min-height: 1900px;
   margin-top: -80px;
@@ -168,7 +168,11 @@
   height: 390px;
 }
 
-
+@media(max-width:1024px){
+  .widget-parent-1,.widget-parent-2,.widget-parent-3,.widget-parent-4,.widget-parent-5{
+    display: none;
+  }
+}
 @media screen and (max-width: 479px) {
   .hero-content h1 {
     letter-spacing: 0;
