@@ -2,6 +2,7 @@ import "../hero.css";
 import { useScroll,motion,useMotionValueEvent,useTransform,useSpring} from "framer-motion";
 import { cubicBezier, circOut,easeIn,animate} from "framer-motion"
 import { useEffect, useRef,useState } from "react";
+import { useNavigate } from "react-router-dom";
 export default function HeroSection() {
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -17,8 +18,8 @@ export default function HeroSection() {
       };
       
         const springConfig = {
-            stiffness: 80,
-            damping: 50,
+            stiffness: 150,
+            damping: 120,
             restDelta: 0.001,
           
         };
@@ -40,7 +41,7 @@ export default function HeroSection() {
       const fifthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
       const fifthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
       const fifthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, -48], easeIn, springConfig);
-      
+      const navigate=useNavigate();
 // const [animationValue,setAnimationValue]=useState(0)
 // useMotionValueEvent(scrollYProgress,'change',(value)=>{
 // setAnimationValue((prev)=>{
@@ -208,7 +209,9 @@ export default function HeroSection() {
                    style={{ position: 'relative' }} 
                 
                 className="mt-[64px]">
-                    <a className="create-bento" href="#">
+                    <a onClick={()=>{
+                      navigate('/login')  
+                    }} className="create-bento" href="#">
                         <span>Create Your Bento</span>
                     </a>
                 </motion.div>

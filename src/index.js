@@ -8,12 +8,29 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import Login from './Login';
+import CreateBento from './CreateBento';
+import Middleware from './components/Middleware';
+import Redirect from './components/Redirect';
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
   },
+  {
+    path:"/login",
+    element: <Redirect>
+      <Login />
+    </Redirect>
+  },
+  {
+    path:"/create-bento/:userName",
+    element:<Middleware>
+      <CreateBento />
+    </Middleware>
+  }
 ]);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
