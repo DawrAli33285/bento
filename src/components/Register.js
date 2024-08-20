@@ -81,7 +81,9 @@ useEffect(() => {
 
 const socialRegister=async()=>{
     try{
-        const auth2 = gapi.auth2.getAuthInstance();
+        const auth2 = gapi.auth2.getAuthInstance({
+        redirect_uri: 'https://bento-black.vercel.app'
+        });
       const googleUser = await auth2.signIn();
       console.log('User signed in:', googleUser.getBasicProfile());
       console.log('ID Token:', googleUser.getAuthResponse().id_token);
