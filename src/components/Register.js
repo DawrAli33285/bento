@@ -67,7 +67,8 @@ useEffect(() => {
       gapi.load('client:auth2', () => {
         gapi.client.init({
           clientId: '87856424688-nhil5aauafjgorqfrnt432sf2gg66a4k.apps.googleusercontent.com',
-          scope: 'profile email'
+          scope: 'profile email',
+          redirect_uri: 'https://bento-black.vercel.app'
         }).then(() => {
           console.log('GAPI client initialized');
         }).catch((error) => {
