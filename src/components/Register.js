@@ -22,11 +22,9 @@ export default function Register({setRegister}){
         setShowPassword(!showPassword);
     };
     const handlelink = async(e)=>{
-       if(e.target.value.length===0){
-        setError("")
         setIsNameValid(false)
-       }else{
-        setIsNameValid(true)
+        if(e.target.value.length===0){
+        setError("")
        }
         try{
 let response=await axios.get(`${BASE_URL}/validate-userName/${e.target.value}`)
