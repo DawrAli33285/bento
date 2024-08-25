@@ -87,7 +87,19 @@ const socialRegister=async()=>{
       console.log('User signed in:', googleUser.getBasicProfile());
       console.log('ID Token:', googleUser.getAuthResponse().id_token);
     let email= googleUser?.getBasicProfile()?.cu
-let response=await axios.post(`${BASE_URL}/socialRegister`,{email,userName:state.userName})
+    const accessToken = googleUser.getAuthResponse().access_token;
+
+    const response = await fetch('https://people.googleapis.com/v1/people/me?personFields=photos', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Accept': 'application/json',
+        },
+      });
+      const data = await response.json();
+      const profilePic = data.photos?.[0]?.url; 
+
+
+let responsetwo=await axios.post(`${BASE_URL}/socialRegister`,{email,userName:state.userName,profilePic})
 navigate(`/create-bento/${state.userName}`)
 }catch(e){
         if(e?.response?.data?.error){
