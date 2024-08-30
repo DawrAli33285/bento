@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom"
 export default function AboutUs() {
     let [currentUSer,setCurrentUser]=useState("")
     useEffect(()=>{
-        window.scrollTo(0,0)
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 10);
 setCurrentUser(JSON.parse(localStorage.getItem('user')))
     },[])
     let navigate=useNavigate();
