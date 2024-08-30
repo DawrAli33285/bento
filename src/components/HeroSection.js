@@ -13,14 +13,15 @@ export default function HeroSection() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
     const useCreateSpring = (scrollY, inputRange, outputRange, ease, springConfig) => {
-        const transform = useTransform(scrollY, inputRange, outputRange, { ease });
-        return useSpring(transform, springConfig);
+        const transform = useTransform(scrollY, inputRange, outputRange);
+  const spring = useSpring(transform, { stiffness:150,damping:120,velocity:150,duration:0.2});
+  return spring;
       };
       
         const springConfig = {
             stiffness: 150,
             damping: 120,
-            restDelta: 0.001,
+           
           
         };
       
@@ -41,6 +42,7 @@ export default function HeroSection() {
       const fifthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
       const fifthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
       const fifthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, -48], easeIn, springConfig);
+      
       const navigate=useNavigate();
 // const [animationValue,setAnimationValue]=useState(0)
 // useMotionValueEvent(scrollYProgress,'change',(value)=>{
