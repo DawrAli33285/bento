@@ -3,16 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import ScrollToTop from './components/ScrollToTop';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from './Login';
 import CreateBento from './CreateBento';
 import Middleware from './components/Middleware';
 import Redirect from './components/Redirect';
 import AboutUs from './AboutUs';
+
+// Define your routes
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,7 +38,10 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RouterProvider router={router}>
+      <ScrollToTop />  
+      <App />          
+    </RouterProvider>
   </React.StrictMode>
 );
 

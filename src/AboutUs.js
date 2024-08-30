@@ -5,7 +5,7 @@ export default function AboutUs() {
     useEffect(()=>{
         setTimeout(() => {
             window.scrollTo(0, 0);
-        }, 10);
+        }, 100);
 setCurrentUser(JSON.parse(localStorage.getItem('user')))
     },[])
     let navigate=useNavigate();
