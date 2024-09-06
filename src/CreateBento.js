@@ -149,9 +149,9 @@ export default function CreateBento() {
             }
 
             let response = await axios.post(`${BASE_URL}/create-bento`, newWidget, headers);
-            console.log("new widget")
-            console.log(newWidget)
-            setLayout([...layout, newWidget]);
+            console.log("new widget final")
+            console.log(response)
+            setLayout([...layout, response.data.data]);
             setCounter(counter + 1);
 
         } catch (error) {

@@ -5,6 +5,10 @@ const  Linkcomponent = ({ content, getLinkLogo,logo,title,screenshot}) => {
     const [metadata, setMetadata] = useState({ title: '', description: '',screenshot:'' });
     const [loading, setLoading] = useState(false); 
     const screenshotRef=useRef()
+    const titleRef=useRef()
+   if(title){
+    titleRef.current=title
+   }
  
 if(screenshot){
     screenshotRef.current=screenshot
@@ -50,7 +54,7 @@ if(screenshot){
             
             {content}
             <p>
-                {title?title:metadata?.title}
+                {titleRef.current?titleRef.current:metadata?.title}
             </p>
             {loading ? (
                 <div className="flex justify-center items-center h-40">
