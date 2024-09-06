@@ -270,24 +270,24 @@ export default function CreateBento() {
 
 
 
-    const getMetaData = (content) => {
-        try {
-            axios.get(`${BASE_URL}/metadata`, {
-                params: {
-                    url: content
-                }
-            })
-                .then(response => {
-                    return response.data
-                })
-                .catch(() => {
+    // const getMetaData = (content) => {
+    //     try {
+    //         axios.get(`${BASE_URL}/metadata`, {
+    //             params: {
+    //                 url: content
+    //             }
+    //         })
+    //             .then(response => {
+    //                 return response.data
+    //             })
+    //             .catch(() => {
 
-                });
+    //             });
 
-        } catch (error) {
+    //     } catch (error) {
 
-        }
-    }
+    //     }
+    // }
 
     useEffect(() => {
         const fetchMyBento = async () => {
@@ -667,7 +667,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
 
                             layout.map(widget => {
 
-                                const { i, x, y, w, h, type, content, logo, title, caption, link } = widget;
+                                const { i, x, y, w, h, type, content,screenshot, logo, title, caption, link } = widget;
                                 console.log("Rendering widget with type:", type, "and content:", content, caption, link);
                                 return (
                                     <div
@@ -732,7 +732,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                                             </div>
                                         )}
                                         {type === 'link' && (
-                                            <Linkcomponent getLinkLogo={getLinkLogo} logo={logo} title={title} getMetaData={getMetaData} content={content} />
+                                            <Linkcomponent screenshot={screenshot} getLinkLogo={getLinkLogo} logo={logo} title={title} content={content} />
                                         )}
                                         {type === 'title' && (
                                             <div
