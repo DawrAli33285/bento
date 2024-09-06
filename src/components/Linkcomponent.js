@@ -5,6 +5,7 @@ const  Linkcomponent = ({ content, getLinkLogo,logo,title,screenshot}) => {
     const [metadata, setMetadata] = useState({ title: '', description: '',screenshot:'' });
     const [loading, setLoading] = useState(false); 
     const screenshotRef=useRef()
+ 
 if(screenshot){
     screenshotRef.current=screenshot
 }
