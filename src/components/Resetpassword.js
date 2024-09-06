@@ -140,7 +140,7 @@ setState({
     navigate(`/create-bento/${response?.data?.userName}`)
     } catch (error) {
         console.log("ERROR")
-        console.log(error.response.data.error)
+     
     if(error?.response?.data?.error){
       
         toast.error(error?.response?.data?.error)
