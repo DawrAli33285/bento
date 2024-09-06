@@ -275,11 +275,11 @@ gsap.to(widgetparent2, {
                 className="mt-[64px]">
                     <a onClick={()=>{
                       navigate('/login')  
-                    }} className="create-bento" href="#">
+                    }} className="create-bento">
                         <span>Create Your Bento</span>
                     </a>
                 </motion.div>
-                <a className="hero-login" href="#">Log In</a>
+                <a className="hero-login" >Log In</a>
             </motion.div>
         </div>
     );
