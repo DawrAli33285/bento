@@ -272,7 +272,7 @@ export default function CreateBento() {
 
     const getMetaData = (content) => {
         try {
-            axios.get('http://localhost:5000/metadata', {
+            axios.get(`${BASE_URL}/metadata`, {
                 params: {
                     url: content
                 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import { BASE_URL } from "../baseURL";
 const Linkcomponent = ({ content, getLinkLogo,logo,title,getMetaData }) => {
     const [metadata, setMetadata] = useState({ title: '', description: '' });
     useEffect(() => {
@@ -8,7 +9,7 @@ const Linkcomponent = ({ content, getLinkLogo,logo,title,getMetaData }) => {
 
             try {
               
-                const response = await axios.get(`http://localhost:5000/metadata`, {
+                const response = await axios.get(`${BASE_URL}/metadata`, {
                     params: {
                         url: content
                     }
