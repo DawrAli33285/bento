@@ -15,22 +15,34 @@ export default function HeroSection() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
     const useCreateSpring = (scrollY, inputRange, outputRange, ease, springConfig) => {
-        const transform = useTransform(scrollY, inputRange, outputRange, { ease: easeIn });
-     return transform
+        const transform = useTransform(scrollY, inputRange, outputRange, { ease });
+        return useSpring(transform, springConfig);
       };
       
         const springConfig = {
             stiffness: 150,
             damping: 120,
-            restDelta: 0.001,
+           
           
         };
       
       let { scrollY } = useScroll();
       
-     
-      const opaictyChangetwo = useCreateSpring(scrollY, [150, 400], [1, 0], easeIn, springConfig);
-
+      const negativeMargintwo = useCreateSpring(scrollY, [30, 350], [0, -100], easeIn, springConfig);
+      const firstRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
+      const secondRotatetwo = useCreateSpring(scrollY, [100, 350], [-2, -5], easeIn, springConfig);
+      const secondMarginXtwo = useCreateSpring(scrollY, [50, 350], [-120, -200], easeIn, springConfig);
+      const secondMarginytwo = useCreateSpring(scrollY, [50, 350], [0, -200], easeIn, springConfig);
+      const opaictyChangetwo = useCreateSpring(scrollY, [50, 300], [1, 0], easeIn, springConfig);
+      const thirdCardtwo = useCreateSpring(scrollY, [80, 450], [0, 90], easeIn, springConfig);
+      const thirdMargintwo = useCreateSpring(scrollY, [80, 350], [120, 200], easeIn, springConfig);
+      const thirdXMargintwo = useCreateSpring(scrollY, [100, 350], [0, -150], easeIn, springConfig);
+      const fourthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fourthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, 200], easeIn, springConfig);
+      const fourthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
+      const fifthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fifthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
+      const fifthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, -48], easeIn, springConfig);
       const navigate=useNavigate();
       useEffect(()=>{
 let widgetparent2=document.querySelector(".widget-parent-2")
