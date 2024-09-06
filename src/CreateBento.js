@@ -658,7 +658,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                         cols={6}
                         rowHeight={30}
                         width={containerWidth}
-                        compactType="vertical"
+                        compactType="null"
                         preventCollision={false}
                         onLayoutChange={handleLayoutChange}
                     >
