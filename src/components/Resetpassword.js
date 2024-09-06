@@ -210,7 +210,7 @@ setTimeout(()=>{
                                 : "bg-black opacity-60 cursor-not-allowed"
                             }`}
                             onClick={updatePassword}
-                            style={{ pointerEvents: isEmailValid ? "auto" : "none" }}
+                            style={{ pointerEvents: state.password.length>0? "auto" : "none" }}
                             >
                             Reset password
                         </div>
