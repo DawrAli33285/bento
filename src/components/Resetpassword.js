@@ -4,17 +4,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { BASE_URL } from "../baseURL";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
 import { gapi } from "gapi-script";
 import { animate, motion ,useAnimation} from "framer-motion";
 const getRandomValue = (min, max) => Math.random() * (max - min) + min;
-export default function LoginForm({setRegister}) {
+export default function Resetpassword({setRegister}) {
     const [showPassword, setShowPassword] = useState(false);
-    const [resetPassword, setResetPassword] = useState(false);
+    const [resetPassword, setResetPassword] = useState(true);
     const [email, setEmail] = useState("");
     const [state,setState]=useState({
-        email:'',
-        password:''
+        password:'',
+        token:''
     })
 
     let navigate=useNavigate();
@@ -117,7 +117,14 @@ useEffect(() => {
     gapi.load('client:auth2', initClient);
   }, []);
 
-
+let location=useLocation();
+  useEffect(()=>{
+let search=new URLSearchParams(location.search)
+setState({
+    ...state,
+   token:search.get('token')
+})
+},[])
   const handleSocial = async () => {
     
     try {
@@ -142,48 +149,57 @@ useEffect(() => {
     }
     }
   };
-
-
-  const sendReset=async(req,res)=>{
+const updatePassword=async(req,res)=>{
     try{
-let response=await axios.post(`${BASE_URL}/resetPassword`,{email})
-toast.success("Reset password link sent")
-        setEmail("")
+     let response=await axios.post(`${BASE_URL}/newPassword`,state)
+     toast.success("Password reset dont sucessfully")   
+     setState({
+        token:'',
+        password:''
+     })
+setTimeout(()=>{
+    navigate(-1)
+},200)
+  
     }catch(e){
-if(e?.response?.data?.error){
-    toast.error(e?.response?.data?.error)
-}else{
-    toast.error("Server error please try again")
-}
-console.log(e.message)
+        if(e?.response?.data?.error){
+            toast.error(e?.response?.data?.error)
+        }else{
+            toast.error("Server error please try again")
+        }
+        console.log(e.message)
     }
-  }
+}
 
     return (
-        <>
+        <div  className="h-[100%] flex flex-row items-center justify-center">
               <ToastContainer />
-        <div className="lg:grid lg:grid-cols-2 flex w-full lg:p-[25px]">
+        <div  className="lg:grid lg:grid-cols-2 flex w-full lg:p-[25px]">
         <div style={{zIndex:10}} className="absolute cursor-pointer" >
           <svg onClick={()=>{
       resetPassword? setResetPassword(false):navigate(-1)
           }} width={33} height={33} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 17L3 12M3 12L8 7M3 12H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
             </div> 
            
-            {
-                resetPassword ? <div className="flex py-10 flex-col lg:gap-10 gap-5">
+         <div className="flex py-10 flex-col lg:gap-10 gap-5">
                     <div className="flex flex-col">
                         <h1 className="text-[32px] font-semibold">Reset Your Password</h1>
-                        <h2 className="text-[20px] font-[400] mt-[10px] text-gray-500">To which email should we send the reset link?</h2>
+                        <h2 className="text-[20px] font-[400] mt-[10px] text-gray-500">Please enter new password</h2>
                     </div>
                     <div className="form flex flex-col gap-4">
                         <div className="inputfields grid grid-cols-1 gap-[20px] items-center">
                             <span className="inputfieldcontainer rounded-[8px] p-[12px] bg-[#f7f7f7]">
                                 <input
-                                    type="email"
-                                    placeholder="Email address"
+                                    type={showPassword?'text':'password'}
+                                    placeholder="Password"
                                     className="py-[5px] w-[100%] resetemail w-[100%]"
-                                    value={email}
-                                    onChange={handleEmailChange}
+                                    value={state.password}
+                                    onChange={(e)=>{
+                                        setState({
+                                            ...state,
+                                            password:e.target.value
+                                        })
+                                    }}
                                     />
                             </span>
                         </div>
@@ -193,68 +209,14 @@ console.log(e.message)
                                 ? "bg-black"
                                 : "bg-black opacity-60 cursor-not-allowed"
                             }`}
-                            onClick={sendReset}
+                            onClick={updatePassword}
                             style={{ pointerEvents: isEmailValid ? "auto" : "none" }}
                             >
-                            Send Reset Link
+                            Reset password
                         </div>
                     </div>
-                </div> : <div className="flex py-10 flex-col lg:gap-10 gap-5">
-                    <div className="flex flex-col">
-                        <h1 className="text-[32px] font-semibold">Log in to your Bento</h1>
-                        <h2 className="text-[20px] font-[400] mt-[10px] text-gray-500">Good to have you back!</h2>
-                    </div>
-                    <div className="form flex flex-col">
-                        <div className="inputfields grid lg:grid-cols-2 grid-cols-1 gap-[20px] items-center">
-                            <span className="inputfieldcontainer rounded-[8px] p-[12px] bg-[#f7f7f7]">
-                                <input
-                                    type="email"
-                                    placeholder="Email address"
-                                    className="py-[5px] w-[100%]"
-                                    value={state.email}
-                                    onChange={(e)=>{
-                                        setState({
-                                            ...state,
-                                            email:e.target.value
-                                        })
-                                    }}
-                                    />
-                            </span>
-                            <span className="inputfieldcontainer rounded-[8px] flex items-center justify-between p-[12px] bg-[#f7f7f7]">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    className="py-[5px] w-[100%]"
-                                    value={state.password}
-                                    onChange={(e)=>{
-                                        setState({
-                                            ...state,
-                                            password:e.target.value
-                                        })
-                                    }}
-                                    />
-                                <span
-                                    className="px-[10px] bg-white shadow-md font-[500] py-[5px] hover:cursor-pointer"
-                                    onClick={togglePasswordVisibility}
-                                    >
-                                    {showPassword ? "Hide" : "Show"}
-                                </span>
-                            </span>
-                            <span className="text-[#1d9bf0] hover:cursor-pointer underline text-[12px]" onClick={ResetPasword}>Reset Password</span>
-                        </div>
-                        <div className="my-[20px] font-bold text-[14px]">
-                            OR
-                        </div>
-                  {state.email.length>0?<div onClick={loginNow} className="w-[full] p-[10px] flex justify-center items-center text-white font-500 gap-[10px] bg-[#000000] rounded-[10px] shadow-md hover:cursor-pointer">
-                          Log In
-                        </div>:<div onClick={handleSocial} className="w-[full] p-[10px] flex justify-center items-center text-white font-500 gap-[10px] bg-[#1d9bf0] rounded-[10px] shadow-md hover:cursor-pointer">
-                            <svg width="16" height="16" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.5 8.68348C16.5 8.15673 16.4523 7.65666 16.3706 7.16992H8.67383V10.177H13.0807C12.8832 11.1638 12.3042 11.9973 11.446 12.5641V14.5643H14.0752C15.6145 13.1708 16.5 11.1172 16.5 8.68348Z" fill="white"></path><path d="M8.6728 16.4997C10.8797 16.4997 12.7255 15.7796 14.0741 14.5594L11.445 12.5591C10.7094 13.0392 9.77623 13.3325 8.6728 13.3325C6.54087 13.3325 4.73589 11.9257 4.08882 10.0254H1.37793V12.0857C2.71975 14.6994 5.47831 16.4997 8.6728 16.4997Z" fill="white"></path><path d="M4.08954 10.0282C3.91926 9.54808 3.83071 9.03467 3.83071 8.50126C3.83071 7.96785 3.92607 7.45444 4.08954 6.97437V4.91406H1.37865C0.820129 5.99422 0.5 7.20773 0.5 8.50126C0.5 9.79478 0.820129 11.0083 1.37865 12.0885L4.08954 10.0282Z" fill="white"></path><path d="M8.6728 3.66714C9.8784 3.66714 10.9546 4.07386 11.806 4.86731L14.1354 2.58698C12.7255 1.29345 10.8797 0.5 8.6728 0.5C5.47831 0.5 2.71975 2.30027 1.37793 4.91399L4.08882 6.97429C4.73589 5.07401 6.54087 3.66714 8.6728 3.66714Z" fill="white"></path></svg>
-                            Sign in with Google
-                        </div>}
-                        <span className="mt-[30px] text-[14px] hover:cursor-pointer" onClick={()=>{setRegister(false)}}>or signup</span>
-                    </div>
-                </div>
-            }
+                </div> 
+        
             <div className=" hidden xl:flex w-full justify-center">
                 <div className="max-w-[384px] gap-[10px] grid grid-cols-3 grid-rows-4">
                     <motion.div animate={controls1} className="first-img p-[22px] row-span-2 bg-[#55acee] rounded-[22px]">
@@ -283,6 +245,6 @@ console.log(e.message)
 
             </div>
         </div>
-            </>
+            </div>
     );
 }

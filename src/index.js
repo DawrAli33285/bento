@@ -14,6 +14,7 @@ import Middleware from './components/Middleware';
 import Redirect from './components/Redirect';
 import AboutUs from './AboutUs';
 import ChangeLog from './changelog';
+import Resetpassword from './components/Resetpassword';
 
 // Define your routes
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/changelog",
     element: <ChangeLog />,
+  },
+  {
+    path: "/resetpassword",
+    element: <Resetpassword/>,
   },
 ]);
 

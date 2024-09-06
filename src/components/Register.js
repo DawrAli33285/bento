@@ -174,9 +174,13 @@ useEffect(() => {
         <>
         <ToastContainer/>
         <div className="lg:grid lg:grid-cols-2 flex w-full lg:p-[25px] gap-[60px]">
-         
+        <div style={{zIndex:10}} className="absolute cursor-pointer" >
+          <svg onClick={()=>{
+            setRegister(true)
+          }} width={33} height={33} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 17L3 12M3 12L8 7M3 12H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+            </div> 
             {
-                makelink ? <div className="flex flex-col lg:gap-10 gap-5">
+                makelink ? <div className="py-10 flex flex-col lg:gap-10 gap-5">
                     <div className="flex flex-col">
                         <h1 className="text-[32px] font-semibold">First, claim your unique link</h1>
                         <h2 className="text-[20px] font-[400] mt-[10px] text-gray-500">The good ones are still available!</h2>
@@ -190,7 +194,7 @@ useEffect(() => {
                                 <input
                                     type="text"
                                     placeholder="Your name"
-                                    className="py-[5px]"
+                                    className="py-[5px] w-[100%]"
                                     onChange={handlelink}
                                     />
                             </span>
@@ -210,7 +214,7 @@ useEffect(() => {
                             Grab My Link
                         </button>}
                     </div>
-                </div> : <div className="flex flex-col lg:gap-10 gap-5">
+                </div> : <div className="py-10 flex flex-col lg:gap-10 gap-5">
                     <div className="flex flex-col">
                         <h2 className="text-[20px] font-[400] mt-[10px] text-gray-500">Good to have you back!</h2>
                         <h1 className="text-[32px] font-semibold">bento.me/{state.userName} is yours!</h1>
@@ -222,7 +226,7 @@ useEffect(() => {
                                 required="true"
                                 type="email"
                                 placeholder="Email address"
-                                className="py-[5px]"
+                                className="py-[5px] w-[100%]"
                                 value={state.email}
                                 onChange={(e)=>{
                                     setState({
@@ -236,7 +240,7 @@ useEffect(() => {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Password"
-                                    className="py-[5px]"
+                                    className="py-[5px] w-[100%]"
                                     value={state.password}
                                     onChange={(e)=>{
                                         setState({

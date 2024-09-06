@@ -21,7 +21,14 @@ setCurrentUser(JSON.parse(localStorage.getItem('user')))
     },[])
     return (
         <div className="w-full flex lg:flex-row h-full flex-col lg:p-[64px] p-[24px] lg:gap-[10rem] overflow-auto">
-            <div className="lg:w-[40%] w-full h-full flex flex-col gap-[10px] justify-between lg:sticky lg:top-0">
+           
+             <div style={{zIndex:10}} className="absolute cursor-pointer" >
+          <svg onClick={()=>{
+            navigate(-1)
+          }} width={33} height={33} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 17L3 12M3 12L8 7M3 12H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+            </div> 
+           
+            <div  className="py-10 lg:w-[40%] w-full h-full flex flex-col gap-[10px] justify-between lg:sticky lg:top-0">
                 <div>
                     <div className="w-[120px] h-[120px] rounded-[100%] lg:w-[184px] lg:h-[184px]">
                         <img src="https://creatorspace.imgix.net/users/clb3hlg1o0006l308teslae6x/2Lj9qx6f5z9kdXtM-avatar.png?w=300&h=300" className="w-full h-full object-cover rounded-[100%]" />
