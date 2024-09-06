@@ -12,6 +12,8 @@ import Login from './Login';
 import CreateBento from './CreateBento';
 import Middleware from './components/Middleware';
 import Redirect from './components/Redirect';
+import AboutUs from './AboutUs';
+import ChangeLog from './changelog';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
     element:<Middleware>
       <CreateBento />
     </Middleware>
+  },
+  {
+    path: "/about-us",
+    element: <AboutUs />,
+  },
+  {
+    path:"/changelog",
+    element:<ChangeLog />
   }
 ]);
 

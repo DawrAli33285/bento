@@ -402,11 +402,13 @@ export default function CreateBento() {
     };
 
     const handleClickOutside = (event) => {
-        if (
-            (dropdownRef.current && !dropdownRef.current.contains(event.target) && showsub) ||
-            (popupRef.current && !popupRef.current.contains(event.target) && showProfilePopup)
-        ) {
+        // Check if the click is outside the dropdown
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             if (showsub) setShowSub(false);
+        }
+    
+        // Check if the click is outside the profile popup
+        if (popupRef.current && !popupRef.current.contains(event.target)) {
             if (showProfilePopup) setShowProfilePopup(false);
         }
     };
@@ -418,7 +420,7 @@ export default function CreateBento() {
         };
     }, [showsub, showProfilePopup]);
     const openPopup = (type) => {
-        console.log("fucking type", type)
+      
         if (type === 'name') {
             setPopupValue(user?.userName)
         }
@@ -426,13 +428,16 @@ export default function CreateBento() {
             setPopupValue('');
         }
         setPopupType(type);
-
+setShowSub(true)
         setShowProfilePopup(true);
     };
 
     const handlePopupSave =async() => {
-        
-        console.log(`Saving ${popupType} with value: ${popupValue}`);
+        if(popupValue.length==0){
+            toast.error("Please enter input value")
+            return;
+        }
+   
      
 const mouseDownEvent = new MouseEvent('mousedown', {
     bubbles: true, // Event bubbles up through the DOM
@@ -447,7 +452,8 @@ const mouseDownEvent = new MouseEvent('mousedown', {
         setShowProfilePopup(false);
         setShowSub(false)
       try{
-        let validateUser=await axios.get(`${BASE_URL}/validate-userName/${popupValue}`)
+        
+       
 
         let token = JSON.parse(localStorage.getItem('user'))
         console.log(token?.token)
@@ -456,8 +462,29 @@ const mouseDownEvent = new MouseEvent('mousedown', {
                 authorization: `Bearer ${token?.token}`
             }
         };
-  
-        let response=await axios.patch(`${BASE_URL}/updateProfile`,{userName:popupValue},headers)
+        let data = {};
+
+        if (popupType === 'name') {
+          try{
+            let validateUser=await axios.get(`${BASE_URL}/validate-userName/${popupValue}`)
+          }catch(e){
+if(e.response.data.error){
+toast.error(e.response.data.error)
+}else{
+toast.error("Server error please try again")
+}
+    
+return;
+          }
+          data.userName = popupValue;
+        } else if (popupType === 'email') {
+          data.email = popupValue;
+        } else if (popupType === 'password') {
+          data.password = popupValue;
+        }
+        
+        let response = await axios.patch(`${BASE_URL}/updateProfile`, data, headers);
+
 console.log("UPDATE")
 window.location.href=`/create-bento/${popupValue}`
       
@@ -554,7 +581,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                             <AnimatePresence >
 
 {showsub &&(
-    <motion.span initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.3,ease:"easeInOut"}} exit={{opacity:0,scale:0}} className={` bg-white w-[200px] rounded-[20px]  flex-col gap-[6px] shadow-md p-[10px] absolute top-[-800%]`}>
+    <motion.span initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.3,ease:"easeInOut"}} exit={{opacity:0,scale:0}} className={` bg-white w-[200px] rounded-[20px]  flex-col gap-[6px] showsub shadow-md p-[10px] absolute top-[-800%]`}>
     <span onClick={(e) => { e.stopPropagation(); openPopup("name") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
         <p className='text-[14px]'>Change UserName</p>
         <p className='text-[14px]'>{user?.userName}</p>
@@ -605,7 +632,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                                         onClick={handlePopupSave}
                                         className="bg-blue-500 text-white p-2 rounded-lg w-full mt-[20px]"
                                     >
-                                        Update My User Name
+                                        {popupType === 'name' ? 'Choose Username for your Bento' : popupType === 'email' ? 'Change Email' : 'Change Password'}
                                     </button>
 
                                 </motion.div>

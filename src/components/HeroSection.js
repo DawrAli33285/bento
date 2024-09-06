@@ -3,6 +3,8 @@ import { useScroll,motion,useMotionValueEvent,useTransform,useSpring} from "fram
 import { cubicBezier, circOut,easeIn,animate} from "framer-motion"
 import { useEffect, useRef,useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { gsap, ScrollTrigger, Draggable, MotionPathPlugin,Flip } from "gsap/all";
+gsap.registerPlugin(ScrollTrigger, Draggable, Flip, MotionPathPlugin); 
 export default function HeroSection() {
 
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -13,8 +15,8 @@ export default function HeroSection() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
     const useCreateSpring = (scrollY, inputRange, outputRange, ease, springConfig) => {
-        const transform = useTransform(scrollY, inputRange, outputRange, { ease });
-        return useSpring(transform, springConfig);
+        const transform = useTransform(scrollY, inputRange, outputRange, { ease: easeIn });
+     return transform
       };
       
         const springConfig = {
@@ -26,22 +28,100 @@ export default function HeroSection() {
       
       let { scrollY } = useScroll();
       
-      const negativeMargintwo = useCreateSpring(scrollY, [30, 350], [0, -100], easeIn, springConfig);
-      const firstRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
-      const secondRotatetwo = useCreateSpring(scrollY, [100, 350], [-2, -5], easeIn, springConfig);
-      const secondMarginXtwo = useCreateSpring(scrollY, [50, 350], [-120, -200], easeIn, springConfig);
-      const secondMarginytwo = useCreateSpring(scrollY, [50, 350], [0, -200], easeIn, springConfig);
-      const opaictyChangetwo = useCreateSpring(scrollY, [50, 300], [1, 0], easeIn, springConfig);
-      const thirdCardtwo = useCreateSpring(scrollY, [80, 450], [0, 90], easeIn, springConfig);
-      const thirdMargintwo = useCreateSpring(scrollY, [80, 350], [120, 200], easeIn, springConfig);
-      const thirdXMargintwo = useCreateSpring(scrollY, [100, 350], [0, -150], easeIn, springConfig);
-      const fourthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
-      const fourthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, 200], easeIn, springConfig);
-      const fourthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, 48], easeIn, springConfig);
-      const fifthCardXMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
-      const fifthCardYMargintwo = useCreateSpring(scrollY, [0, 350], [0, -200], easeIn, springConfig);
-      const fifthCardRotatetwo = useCreateSpring(scrollY, [50, 350], [0, -48], easeIn, springConfig);
+     
+      const opaictyChangetwo = useCreateSpring(scrollY, [150, 400], [1, 0], easeIn, springConfig);
+
       const navigate=useNavigate();
+      useEffect(()=>{
+let widgetparent2=document.querySelector(".widget-parent-2")
+
+gsap.to(widgetparent2, {
+    rotate: -5,        
+    x: -200,            
+    y: -200,            
+    opacity: 0,        
+    duration: 1,       
+    ease: "power1.inOut",  
+    scrollTrigger: {
+      trigger: ".hero-section", 
+      start: "top top",     
+      end: "350px top",        
+      scrub: 1,                 
+   
+    }
+  });
+
+
+  gsap.to('.widget-parent-1', {
+    rotate: 48,
+    y: -100,
+    opacity: 0,
+    duration: 1,
+    ease: "power1.inOut",
+    scrollTrigger: {
+      trigger: ".hero-section",
+      start: "top top",
+      end: "350px top",
+      scrub: 1,
+     
+    }
+  });
+
+
+
+  gsap.to('.widget-parent-3', {
+    rotate: 90,        
+    y: 200,     
+    opacity:0,        
+    x: -150,            
+    duration: 1,        
+    ease: "power1.inOut", 
+    scrollTrigger: {
+      trigger: ".hero-section", 
+      start: "top top",         
+      end: "450px top",         
+      scrub: 1,                 
+           
+    }
+  });
+
+
+  gsap.to('.widget-parent-4', {
+    rotate: -48,
+    x: -200,
+    opacity:0,
+    y: -200,
+    duration: 1,
+    ease: "power1.inOut",
+    scrollTrigger: {
+      trigger: ".hero-section",
+      start: "top top",
+      end: "350px top",
+      scrub: 1,
+   
+    }
+  });
+
+
+  gsap.to('.widget-parent-5', {
+    rotate: 48,
+    x: -200,
+    y: 200,
+    opacity:0,
+    duration: 1,
+    ease: "power1.inOut",
+    scrollTrigger: {
+      trigger: ".hero-section",
+      start: "top top",
+      end: "350px top",
+      scrub: 1,
+      
+    }
+  });
+  return () => {
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill()); 
+  };
+      },[])
 // const [animationValue,setAnimationValue]=useState(0)
 // useMotionValueEvent(scrollYProgress,'change',(value)=>{
 // setAnimationValue((prev)=>{
@@ -50,18 +130,14 @@ export default function HeroSection() {
 // })
     return (
         <div  className="hero-section">
-            <motion.div
-              initial={{scale:0}} 
-              animate={{scale:1}}
-              transition={{ duration: 0.5 ,ease:'linear',delay:2}} 
-            
+            <div
+             
                 data-w-id="83a845c0-47bc-de00-f286-0c82adad98ce"
                 style={{
-                    margin:negativeMargintwo,
-                    rotate:firstRotatetwo,
+                  
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity:opaictyChangetwo,
+                   
                    
                    
                 }}
@@ -77,18 +153,12 @@ export default function HeroSection() {
                     alt=""
                     className="image-square"
                 />
-            </motion.div>
-            <motion.div
-                     initial={{scale:0}} 
-                     animate={{scale:1}}
-                     transition={{ duration: 0.5 ,ease:'linear',delay:2}} 
-                   
+            </div>
+            <div
+                    
                 data-w-id="468c03c8-c19e-776f-4a11-465a0ac15831"
                 style={{
-                   rotate:secondRotatetwo,
-                   opacity:opaictyChangetwo,
-                   marginLeft:secondMarginXtwo,
-                   marginTop:secondMarginytwo,
+       
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-2deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
                   
@@ -103,20 +173,14 @@ export default function HeroSection() {
                     alt=""
                     className="image-wide"
                 />
-            </motion.div>
-            <motion.div
-                     initial={{scale:0}} 
-                     animate={{scale:1}}
-                     transition={{ duration: 0.5,ease:'linear',delay:2}} 
-                   
+            </div>
+            <div
+                     
                 data-w-id="ffcce45d-359e-ae0e-38aa-f1cca78af502"
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChangetwo,
-                    rotate:thirdCardtwo,
-                    marginTop:thirdMargintwo,
-                    marginLeft:thirdXMargintwo
+              
                 }}
                 className="widget-parent-3"
             >
@@ -126,20 +190,14 @@ export default function HeroSection() {
                     alt=""
                     className="image-square"
                 />
-            </motion.div>
-            <motion.div
-                     initial={{scale:0}} 
-                     animate={{scale:1}}
-                     transition={{ duration: 0.5 ,ease:'linear',delay:2}} 
+            </div>
+            <div
                    
                 data-w-id="3d305a87-cbde-ab14-700d-7b9983e2c8cf"
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChangetwo,
-                    rotate:fifthCardRotatetwo,
-                    marginTop:fifthCardYMargintwo,
-                    marginRight:fifthCardXMargintwo
+            
                 }}
                 className="widget-parent-4"
             >
@@ -151,20 +209,14 @@ export default function HeroSection() {
                     alt=""
                     className="image-tall"
                 />
-            </motion.div>
-            <motion.div
-                     initial={{scale:0}} 
-                     animate={{scale:1}}
-                     transition={{ duration: 0.5 ,ease:'linear',delay:2}} 
-                   
+            </div>
+            <div
+              
                 data-w-id="aac193d9-2d8c-1142-e67a-d6d27cd478ac"
                 style={{
                     transform: 'translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg)',
                     transformStyle: 'preserve-3d',
-                    opacity: opaictyChangetwo,
-                    rotate:fourthCardRotatetwo,
-                    marginRight:fourthCardXMargintwo,
-                    marginTop:fourthCardYMargintwo
+
                 }}
                 className="widget-parent-5"
             >
@@ -176,7 +228,7 @@ export default function HeroSection() {
                     alt=""
                     className="image-square"
                 />
-            </motion.div>
+            </div>
             <motion.div
             style={{ opacity: !isMobile ? opaictyChangetwo: 1 }} 
             className="hero-content"
