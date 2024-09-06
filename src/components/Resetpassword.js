@@ -205,7 +205,7 @@ setTimeout(()=>{
                         </div>
 
                         <div
-                            className={`w-full p-[10px] flex justify-center items-center text-white font-500 gap-[10px] rounded-[10px] shadow-md hover:cursor-pointer ${isEmailValid
+                            className={`w-full p-[10px] flex justify-center items-center text-white font-500 gap-[10px] rounded-[10px] shadow-md hover:cursor-pointer ${state.password.length>0
                                 ? "bg-black"
                                 : "bg-black opacity-60 cursor-not-allowed"
                             }`}
