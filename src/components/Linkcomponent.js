@@ -13,31 +13,31 @@ const  Linkcomponent = ({ content, getLinkLogo,logo,title,screenshot}) => {
 if(screenshot){
     screenshotRef.current=screenshot
 }
-    useEffect(() => {
-        const fetchMeta = async () => {
-           if(!screenshotRef?.current){
-            setLoading(true);
-           } // Set loading to true before fetching data
-            try {
-                if(!screenshotRef?.current){
-                    const response = await axios.get(`${BASE_URL}/metadata`, {
-                        params: { url: content }
-                    });
+    // useEffect(() => {
+    //     const fetchMeta = async () => {
+    //        if(!screenshotRef?.current){
+    //         setLoading(true);
+    //        } // Set loading to true before fetching data
+    //         try {
+    //             if(!screenshotRef?.current){
+    //                 const response = await axios.get(`${BASE_URL}/metadata`, {
+    //                     params: { url: content }
+    //                 });
     
-                    setMetadata({
-                        title: response?.data?.title,
-                        screenshot: response?.data?.screenshot
-                    });
-                }
-            } catch (e) {
-                console.log(e.message);
-            } finally {
-                setLoading(false); // Set loading to false after fetching data
-            }
-        };
+    //                 setMetadata({
+    //                     title: response?.data?.title,
+    //                     screenshot: response?.data?.screenshot
+    //                 });
+    //             }
+    //         } catch (e) {
+    //             console.log(e.message);
+    //         } finally {
+    //             setLoading(false); // Set loading to false after fetching data
+    //         }
+    //     };
 
-        fetchMeta();
-    }, [content]);
+    //     fetchMeta();
+    // }, [content]);
 
 
     return (
