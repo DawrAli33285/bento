@@ -34,7 +34,7 @@
     display: inline-block;
 }
 .remove-widget{
-   
+    pointer-events: auto; 
     transition: all .3s ease-in-out;
 }
 .box:hover .remove-widget{

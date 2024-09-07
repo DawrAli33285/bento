@@ -10,7 +10,7 @@ import Linkcomponent from './components/Linkcomponent';
 import { BASE_URL } from './baseURL';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence,motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 export default function CreateBento() {
@@ -32,7 +32,7 @@ export default function CreateBento() {
     const [popupValue, setPopupValue] = useState('');
     const [uploadedMedia, setUploadedMedia] = useState(null);
     const [screenshot, setScreenshot] = useState('');
-    const [invalidUserName,setInValidUserName]=useState(false)
+    const [invalidUserName, setInValidUserName] = useState(false)
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: async (acceptedFiles) => {
@@ -271,7 +271,7 @@ export default function CreateBento() {
 
 
 
-    
+
 
     useEffect(() => {
         const fetchMyBento = async () => {
@@ -414,75 +414,75 @@ export default function CreateBento() {
         setShowProfilePopup(true);
     };
 
-    const handlePopupSave =async() => {
-        
+    const handlePopupSave = async () => {
+
         console.log(`Saving ${popupType} with value: ${popupValue}`);
-     
-const mouseDownEvent = new MouseEvent('mousedown', {
-    bubbles: true, // Event bubbles up through the DOM
-    cancelable: true, // Event can be canceled
-    view: window, // The window that created the event
-    clientX: 100, // X-coordinate relative to the viewport (optional)
-    clientY: 200, 
-  });
-  
- 
-  document.dispatchEvent(mouseDownEvent);
+
+        const mouseDownEvent = new MouseEvent('mousedown', {
+            bubbles: true, // Event bubbles up through the DOM
+            cancelable: true, // Event can be canceled
+            view: window, // The window that created the event
+            clientX: 100, // X-coordinate relative to the viewport (optional)
+            clientY: 200,
+        });
+
+
+        document.dispatchEvent(mouseDownEvent);
         setShowProfilePopup(false);
         setShowSub(false)
-      try{
-        let validateUser=await axios.get(`${BASE_URL}/validate-userName/${popupValue}`)
+        try {
+            let validateUser = await axios.get(`${BASE_URL}/validate-userName/${popupValue}`)
 
-        let token = JSON.parse(localStorage.getItem('user'))
-        console.log(token?.token)
-        let headers = {
-            headers: {
-                authorization: `Bearer ${token?.token}`
+            let token = JSON.parse(localStorage.getItem('user'))
+            console.log(token?.token)
+            let headers = {
+                headers: {
+                    authorization: `Bearer ${token?.token}`
+                }
+            };
+
+            let response = await axios.patch(`${BASE_URL}/updateProfile`, { userName: popupValue }, headers)
+            console.log("UPDATE")
+            window.location.href = `/create-bento/${popupValue}`
+
+        } catch (e) {
+            if (e?.response?.data?.error) {
+                setInValidUserName(true)
+            } else {
+                setInValidUserName(false)
             }
-        };
-  
-        let response=await axios.patch(`${BASE_URL}/updateProfile`,{userName:popupValue},headers)
-console.log("UPDATE")
-window.location.href=`/create-bento/${popupValue}`
-      
-      }catch(e){
-if(e?.response?.data?.error){
-setInValidUserName(true)
-}else{
-    setInValidUserName(false)
-}
-      }
+        }
     };
     const takeScreenshot = () => {
         html2canvas(document.documentElement).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
             setScreenshot(imgData);
-           
+
         });
     };
     useEffect(() => {
         takeScreenshot();
     }, [])
 
-    const updateBio=async(e)=>{
-try{
-    let bio=e.target.value
-    setUser((prev)=>{
-        let old={...prev}
-        return {...old,bio:e.target.value}
-    })
-    let token = JSON.parse(localStorage.getItem('user'))
-    console.log(token?.token)
-    let headers = {
-        headers: {
-            authorization: `Bearer ${token?.token}`
-        }
-    };
-let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
+    const updateBio = async (e) => {
+        try {
+            let bio = e.target.value
+            setUser((prev) => {
+                let old = { ...prev }
+                return { ...old, bio: e.target.value }
+            })
+            let token = JSON.parse(localStorage.getItem('user'))
+            console.log(token?.token)
+            let headers = {
+                headers: {
+                    authorization: `Bearer ${token?.token}`
+                }
+            };
+            let response = await axios.patch(`${BASE_URL}/updateProfile`, { bio }, headers)
 
-}catch(e){
-    console.log(e.message)
-}
+        } catch (e) {
+            console.log(e.message)
+        }
     }
     return (
         <>
@@ -531,70 +531,71 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                         value={user?.bio}
                         className="text-[18px] p-[10px] w-full mt-3 border border-gray-300 rounded-md lg:w-[60%] outline-none border-none"
                         onChange={updateBio}
-                  />
+                    />
                     <div className='flex items-center w-full lg:w-[80%]'>
                         <span onClick={() => { setShowSub(!showsub) }} ref={dropdownRef} className='relative flex items-center hover:cursor-pointer hover:bg-[#f6f6f6] rounded-[100%] p-[10px]'>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="3" width="15" height="2" rx="1" fill="#ada9a9"></rect><rect y="11" width="15" height="2" rx="1" fill="#ada9a9"></rect><circle cx="10" cy="4" r="2" fill="white" stroke="#ada9a9" stroke-width="2"></circle><circle cx="6" cy="12" r="2" fill="white" stroke="#ada9a9" stroke-width="2"></circle></svg>
                             <AnimatePresence >
 
-{showsub &&(
-    <motion.span initial={{scale:0,opacity:0}} animate={{scale:1,opacity:1}} transition={{duration:0.3,ease:"easeInOut"}} exit={{opacity:0,scale:0}} className={` bg-white w-[200px] rounded-[20px]  flex-col gap-[6px] shadow-md p-[10px] absolute top-[-800%]`}>
-    <span onClick={(e) => { e.stopPropagation(); openPopup("name") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
-        <p className='text-[14px]'>Change UserName</p>
-        <p className='text-[14px]'>{user?.userName}</p>
-    </span>
-    <span onClick={(e) => { e.stopPropagation(); !user?.signUpWithGoogle && openPopup("email") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
-        <p className='text-[14px]'>Change Email</p>
-        <p className='text-[14px]'>{
-            user?.signUpWithGoogle ? "Signed In With google " : user?.email
-        }</p>
-    </span>
-    <span onClick={(e) => { e.stopPropagation(); !user?.signUpWithGoogle && openPopup("password") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
-        <p className='text-[14px]'>Change Password</p>
-        <p className='text-[14px]'>
-            {
-                user?.signUpWithGoogle ? "Signed In With google " : "*****"
-            }
-        </p>
-    </span>
-    <span className='border-t-[1px] p-[20px] border-[#EFEFEF] hover:cursor-pointer hover:bg-[#EFEFEF]'>
-        <p onClick={() => {
-            localStorage.removeItem('user')
-            navigate('/')
-        }} className='text-[14px]'>Log Out</p>
-    </span>
-</motion.span>
-)}
- </AnimatePresence>
- <AnimatePresence>
-                           {showProfilePopup && (
-                                <motion.div initial={{opacity:0,rotate:-3,x:-15}} animate={{opacity:1,x:0,rotate:0}} transition={{duration:0.3,ease:"easeInOut"}} exit={{opacity:0,scale:0}} ref={popupRef} className="z-[99999] absolute top-[-800%] left-[600%] bg-white border rounded-lg shadow-lg p-4 lg:w-[300px] w-[200px] h-[286px]">
-                                    <h2 className="text-[18px] font-bold mb-2">
-                                        {popupType === 'name' ? 'Change Username' : popupType === 'email' ? 'Change Email' : 'Change Password'}
-                                    </h2>
-                                    <p className='text-[14px]'>
-                                        {popupType === 'name' ? 'Choose Username for your Bento' : popupType === 'email' ? 'Change Email' : 'Change Password'}
-                                    </p>
-                                    <input
-                                        type={popupType === 'password' ? 'password' : 'text'}
-                                        value={popupValue}
-                                        onChange={(e) => {setPopupValue(e.target.value)
+                                {showsub && (
+                                    <motion.span initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3, ease: "easeInOut" }} exit={{ opacity: 0, scale: 0 }} className={` bg-white w-[200px] rounded-[20px]  flex-col gap-[6px] shadow-md p-[10px] absolute top-[-800%]`}>
+                                        <span onClick={(e) => { e.stopPropagation(); openPopup("name") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
+                                            <p className='text-[14px]'>Change UserName</p>
+                                            <p className='text-[14px]'>{user?.userName}</p>
+                                        </span>
+                                        <span onClick={(e) => { e.stopPropagation(); !user?.signUpWithGoogle && openPopup("email") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
+                                            <p className='text-[14px]'>Change Email</p>
+                                            <p className='text-[14px]'>{
+                                                user?.signUpWithGoogle ? "Signed In With google " : user?.email
+                                            }</p>
+                                        </span>
+                                        <span onClick={(e) => { e.stopPropagation(); !user?.signUpWithGoogle && openPopup("password") }} className='flex flex-col p-[10px] hover:cursor-pointer hover:bg-[#EFEFEF]'>
+                                            <p className='text-[14px]'>Change Password</p>
+                                            <p className='text-[14px]'>
+                                                {
+                                                    user?.signUpWithGoogle ? "Signed In With google " : "*****"
+                                                }
+                                            </p>
+                                        </span>
+                                        <span className='border-t-[1px] p-[20px] border-[#EFEFEF] hover:cursor-pointer hover:bg-[#EFEFEF]'>
+                                            <p onClick={() => {
+                                                localStorage.removeItem('user')
+                                                navigate('/')
+                                            }} className='text-[14px]'>Log Out</p>
+                                        </span>
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                            <AnimatePresence>
+                                {showProfilePopup && (
+                                    <motion.div initial={{ opacity: 0, rotate: -3, x: -15 }} animate={{ opacity: 1, x: 0, rotate: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} exit={{ opacity: 0, scale: 0 }} ref={popupRef} className="z-[99999] absolute top-[-800%] left-[600%] bg-white border rounded-lg shadow-lg p-4 lg:w-[300px] w-[200px] h-[286px]">
+                                        <h2 className="text-[18px] font-bold mb-2">
+                                            {popupType === 'name' ? 'Change Username' : popupType === 'email' ? 'Change Email' : 'Change Password'}
+                                        </h2>
+                                        <p className='text-[14px]'>
+                                            {popupType === 'name' ? 'Choose Username for your Bento' : popupType === 'email' ? 'Change Email' : 'Change Password'}
+                                        </p>
+                                        <input
+                                            type={popupType === 'password' ? 'password' : 'text'}
+                                            value={popupValue}
+                                            onChange={(e) => {
+                                                setPopupValue(e.target.value)
 
 
-                                        }}
-                                        className="w-full border rounded-lg p-2 mb-2"
-                                        placeholder={popupType === 'password' ? 'New Password' : popupType === 'email' ? 'New Email' : 'New Username'}
-                                    />
-                                    <button
-                                        onClick={handlePopupSave}
-                                        className="bg-blue-500 text-white p-2 rounded-lg w-full mt-[20px]"
-                                    >
-                                        Update My User Name
-                                    </button>
+                                            }}
+                                            className="w-full border rounded-lg p-2 mb-2"
+                                            placeholder={popupType === 'password' ? 'New Password' : popupType === 'email' ? 'New Email' : 'New Username'}
+                                        />
+                                        <button
+                                            onClick={handlePopupSave}
+                                            className="bg-blue-500 text-white p-2 rounded-lg w-full mt-[20px]"
+                                        >
+                                            Update My User Name
+                                        </button>
 
-                                </motion.div>
-                            )}
-                           </AnimatePresence>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </span>
                         <a href='#' className='flex items-center hover:cursor-pointer hover:bg-[#f6f6f6] rounded-[100%] p-[10px]'>
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6" stroke="#8E8E8E" stroke-width="2"></circle><path d="M6.22695 6.84827L5.68089 9.57858C5.59287 10.0187 5.98088 10.4067 6.42096 10.3187L9.15128 9.7726C9.4625 9.71035 9.70577 9.46708 9.76801 9.15587L10.3141 6.42555C10.4021 5.98546 10.0141 5.59746 9.574 5.68547L6.84368 6.23154C6.53246 6.29378 6.28919 6.53705 6.22695 6.84827Z" fill="#8E8E8E"></path></svg>
@@ -609,13 +610,16 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
 
                 </div>
                 <div className='lg:w-[70%] w-full '>
-                <ResponsiveReactGridLayout
+                    <ResponsiveReactGridLayout
                         className="layout"
                         layout={layout}
+                        draggableCancel='.remove-widget'
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         rowHeight={30}
                         width={containerWidth}
                         compactType="null"
+                        isDraggable={true}
+                        isResizable={true}
                         preventCollision={false}
                         onLayoutChange={handleLayoutChange}
                     >
@@ -627,13 +631,13 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                                 console.log(widget)
                                 console.log(layout)
 
-                                const { i, x, y, w, h, type, content,  logo, title, caption, link } = widget;
+                                const { i, x, y, w, h, type, content, logo, title, caption, link } = widget;
                                 console.log("Rendering widget with type:", type, "and content:", content, caption, link);
                                 return (
                                     <div
                                         key={i}
                                         data-grid={{ i, x, y, w, h }}
-                                        className={`box relative border rounded-[10px] overflow-visible ${(type === 'image' || type === 'video') ? 'p-0' : 'p-[12px]'}`}
+                                        className={`box relative border rounded-[10px] overflow-visible ${(type === 'image' || type === 'video') ? 'p-0' : 'p-[12px]'} z-[10]`}
 
                                     >
                                         {type === 'image' && content && (
@@ -724,7 +728,12 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
 
                                         <button
                                             className="remove-widget lg:hidden block absolute top-[-20px] w-[30px] h-[30px]  justify-center items-center rounded-[100%] shadow-lg hover:bg-[#EFEFEFEF]  right-0  p-[6px] bg-white z-[9999]"
-                                            onClick={() => removeWidget(i)}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); 
+                                                removeWidget(i);
+                                            }}
+                                            onTouchStart={(e) => e.stopPropagation()} 
+                                            onTouchEnd={(e) => e.stopPropagation()} 
                                         >
                                             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1C5.44772 1 5 1.44772 5 2C5 2.55228 5.44772 3 6 3H12C12.5523 3 13 2.55228 13 2C13 1.44772 12.5523 1 12 1H6ZM2 4C1.44772 4 1 4.44772 1 5C1 5.55228 1.44772 6 2 6H3V14C3 15.6569 4.34315 17 6 17H12C13.6569 17 15 15.6569 15 14V6H16C16.5523 6 17 5.55228 17 5C17 4.44772 16.5523 4 16 4H2ZM5 14V6H13V14C13 14.5523 12.5523 15 12 15H6C5.44772 15 5 14.5523 5 14Z" fill="currentColor"></path></svg>
 
@@ -738,30 +747,30 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
 
                 </div>
                 <div className='create-widget rounded-[10px] w-full shadow-2xl max-w-[500px] fixed bg-white flex p-[10px] z-[9]'>
-                <div className="relative inline-block">
-      <a
-        href="#"
-        onClick={(e) => {
-            e.preventDefault();
-            togglePopup();
-        }}
-        className="relative text-white px-[10px] rounded-[10px] py-[6px] flex justify-center text-[14px] font-bold bg-[#4fdd77] overflow-hidden"
-      >
-        <motion.div
-          className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent"
-          initial={{ x: '-100%' }}
-          animate={{ x: '100%' }}
-          transition={{
-            duration: 2,
-            ease: 'easeInOut',
-            repeat: Infinity,
-            repeatDelay: 1.5,
-          }}
-          onClick={togglePopup}
-        />
-        Share My Bento
-      </a>
-    </div>
+                    <div className="relative inline-block">
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                togglePopup();
+                            }}
+                            className="relative text-white px-[10px] rounded-[10px] py-[6px] flex justify-center text-[14px] font-bold bg-[#4fdd77] overflow-hidden"
+                        >
+                            <motion.div
+                                className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent"
+                                initial={{ x: '-100%' }}
+                                animate={{ x: '100%' }}
+                                transition={{
+                                    duration: 2,
+                                    ease: 'easeInOut',
+                                    repeat: Infinity,
+                                    repeatDelay: 1.5,
+                                }}
+                                onClick={togglePopup}
+                            />
+                            Share My Bento
+                        </a>
+                    </div>
                     <p className='mx-[10px] my-0 text-[#EFEFEF]'>|</p>
                     <div className='flex gap-[6px] items-center'>
                         <span onClick={() => handleWidgetAdd("link")} className='widget-create-thumb hover:cursor-pointer link rounded-[10px] flex justify-center items-center p-[6px] bg-[#f3f3f3] relative'>
@@ -907,7 +916,7 @@ let response=await axios.patch(`${BASE_URL}/updateProfile`,{bio},headers)
                             </div>
                             <span className=' mt-[10px] flex gap-[10px] p-[10px] rounded-[20px] justify-center items-center bg-[#55acee] text-white'> <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" ><path d="M19.9417 3.91813C19.2081 4.24354 18.4195 4.46337 17.592 4.56226C18.4366 4.05601 19.0854 3.25436 19.3909 2.29909C18.6002 2.76796 17.7247 3.10831 16.7927 3.29175C16.0465 2.49668 14.9833 2 13.8064 2C11.547 2 9.71509 3.83149 9.71509 6.09059C9.71509 6.41122 9.75129 6.72345 9.82109 7.02284C6.42081 6.85227 3.40622 5.22364 1.38831 2.74871C1.03614 3.35287 0.83433 4.05551 0.83433 4.80523C0.83433 6.22448 1.55661 7.47655 2.65441 8.21011C1.98377 8.18887 1.35291 8.00484 0.801325 7.69848C0.80086 7.71552 0.80086 7.73267 0.80086 7.74991C0.80086 9.73186 2.21115 11.3851 4.08277 11.7612C3.73948 11.8547 3.37803 11.9047 3.00492 11.9047C2.74129 11.9047 2.48504 11.8789 2.23517 11.8312C2.75585 13.4564 4.26674 14.6391 6.05711 14.672C4.6569 15.7692 2.89285 16.4232 0.97595 16.4232C0.645714 16.4232 0.320066 16.4038 0 16.366C1.81062 17.5267 3.96113 18.2039 6.27159 18.2039C13.7969 18.2039 17.9122 11.9707 17.9122 6.56484C17.9122 6.38749 17.9082 6.21112 17.9004 6.03556C18.6996 5.45892 19.3932 4.73852 19.9417 3.91813Z" fill="white"></path></svg>Tweet</span>
 
-                            
+
                         </div>
                     </div>
                 )}
