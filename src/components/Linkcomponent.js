@@ -26,40 +26,16 @@ if(followers){
   
     followersRef.current=followers
 }
-    // useEffect(() => {
-    //     const fetchMeta = async () => {
-    //        if(!screenshotRef?.current){
-    //         setLoading(true);
-    //        } // Set loading to true before fetching data
-    //         try {
-    //             if(!screenshotRef?.current){
-    //                 const response = await axios.get(`${BASE_URL}/metadata`, {
-    //                     params: { url: content }
-    //                 });
 
-    //                 setMetadata({
-    //                     title: response?.data?.title,
-    //                     screenshot: response?.data?.screenshot
-    //                 });
-    //             }
-    //         } catch (e) {
-    //             console.log(e.message);
-    //         } finally {
-    //             setLoading(false); // Set loading to false after fetching data
-    //         }
-    //     };
-
-    //     fetchMeta();
-    // }, [content]);
 
     function formatNumber(num) {
         num=parseInt(num)
         if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + 'M'; // Format millions
+            return (num / 1000000).toFixed(1) + 'M'; 
         } else if (num >= 1000) {
-            return (num / 1000).toFixed(1) + 'k'; // Format thousands
+            return (num / 1000).toFixed(1) + 'k';
         }
-        return num.toString(); // Return the number as-is if less than 1000
+        return num.toString(); 
     }
 
 
@@ -69,17 +45,17 @@ if(followers){
 
         // Check if it's a YouTube channel link
         if (/youtube\.com\/(c\/|@)/.test(url)) {
-            // Append the subscription confirmation query if it's a YouTube channel
+          
             window.location.href = `${content}?sub_confirmation=1`;
         } else {
-            // For other links, just redirect normally
+           
             window.location.href = content;
         }
     };
     const getActionButton = () => {
         const url = content.toLowerCase();
 
-        // Define mappings for URL patterns to actions
+
         const actions = {
          youtube: /youtube\.com\/(c\/|@|results|user|channel)/,
             instagram: /instagram\.com\//,
@@ -102,7 +78,7 @@ if(followers){
             behance: /behance\.net\//,
         };
 
-        // Determine the action based on URL
+
         for (const [key, regex] of Object.entries(actions)) {
 
             if (regex.test(url)) {
@@ -136,7 +112,7 @@ if(followers){
                                 Follow
                             </button>
                         );
-                    // Add cases for other platforms as needed
+                  
                     default:
                         return (
                        ''
@@ -158,11 +134,11 @@ if(followers){
 
     const togglePlayPause = (uri) => {
         if (currentTrackUri === uri && isPlaying) {
-            // Pause if the same track is clicked while playing
+            
             audioRef.current.pause();
             setIsPlaying(false);
         } else {
-            // Play new track
+        
             const embedUrl = `https://open.spotify.com/embed/track/${uri.split(':').pop()}`;
 
             setCurrentTrackUri(uri);
@@ -211,13 +187,13 @@ if(followers){
                             return (
                                 <div
                                     key={i.toString()}
-                                    className="w-full h-[100px] rounded-[20px] overflow-hidden" // Wrapper for image with fixed height and border-radius
+                                    className="w-full h-[100px] rounded-[20px] overflow-hidden" 
                                 >
                                     <img
                                         onError={() => console.log(`Failed to load image: ${val}`)}
                                         src={val}
                                         alt={`Screenshot ${i}`}
-                                        className="w-full h-full object-cover" // Responsive image within the wrapper
+                                        className="w-full h-full object-cover" 
                                     />
                                 </div>
                             );
@@ -241,7 +217,7 @@ if(followers){
                         const trackName = data.name;
                         const artists = data.artists?.items || [];
                         const duration = data.trackDuration?.totalMilliseconds;
-                        const trackUri = data.uri; // Assuming URI is available
+                        const trackUri = data.uri; 
 
                         return (
                             <div key={index} className="flex items-center gap-[10px]">
