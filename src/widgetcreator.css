@@ -34,9 +34,25 @@
     display: inline-block;
 }
 .remove-widget{
-    pointer-events: auto; 
+     
     transition: all .3s ease-in-out;
 }
 .box:hover .remove-widget{
 display: flex;
+}
+.instagram-btn{
+    font-weight: bold;
+    font-size: 12px;
+    color: white;
+    padding: 7px 14px;
+    background-color: #4093EF;
+    border-radius: 8px;
+}
+.youtube-btn{
+    font-weight: bold;
+    font-size: 12px;
+    color: white;
+    padding: 7px 14px;
+    background-color: red;
+    border-radius: 8px;
 }

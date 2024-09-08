@@ -67,6 +67,16 @@ export default function CreateBento() {
         "Just updated my Bento profile and it’s so cool! Life is all about stepping out of our comfort zone, trying something new and taking a chance to make tomorrow better than today.",
         "Just updated my Bento profile and it’s so cool! Life is all about stepping out of our comfort zone, trying something new and taking a chance to make tomorrow better than today."
     ];
+    const [activeWidgetId, setActiveWidgetId] = useState(null);
+
+    const handleWidgetClick = (widgetId) => {
+        setActiveWidgetId(widgetId);
+    };
+
+    const handleCloseButtonClick = () => {
+        setActiveWidgetId(null);
+    };
+
     const togglePopup = () => {
         setSharePopup(!sharePopup);
 
@@ -125,7 +135,7 @@ export default function CreateBento() {
                 x: nextPosition.x,
                 y: nextPosition.y,
                 w: type === 'text' ? 2 : 1,
-                h: type === 'map' ? 10 : (type === 'image' || type === 'video' || type === 'link') ? 4 : 2,
+                h: type === 'map' ? 5 : (type === 'image' || type === 'video' || type === 'link') ? 4 : 2,
                 type: type,
                 content: content,
                 caption: null,
@@ -233,6 +243,7 @@ export default function CreateBento() {
                 type: originalItem?.type || null,
                 content: originalItem?.content || null,
                 caption: originalItem?.caption || null,
+                spotify: originalItem?.spotify || null
 
             };
         });
@@ -487,11 +498,11 @@ export default function CreateBento() {
     return (
         <>
             <ToastContainer />
-            <div className="flex lg:flex-row flex-col gap-[20px] p-[20px] lg:p-[60px] relative h-full">
-                <div className="w-full lg:w-[30%] flex-col lg:items-start items-center ">
+            <div className="flex lg:flex-row flex-col gap-[20px]  lg:p-[60px] relative h-full">
+                <div className="w-full lg:w-[30%] flex-col lg:p-0 p-[20px] lg:items-start items-center ">
                     <div
                         {...getRootProps()}
-                        className={`hover:cursor-pointer dropzone w-[184px] h-[184px] rounded-full border-dashed border-[4px] border-[#00000014] flex items-center justify-center overflow-hidden`}
+                        className={`hover:cursor-pointer dropzone w-[184px] lg:mx-0 mx-auto h-[184px] rounded-full border-dashed border-[4px] border-[#00000014] flex items-center justify-center overflow-hidden`}
                     >
                         <input {...getInputProps()} />
                         {image || user?.picURL ? (
@@ -613,13 +624,13 @@ export default function CreateBento() {
                     <ResponsiveReactGridLayout
                         className="layout"
                         layout={layout}
-                        draggableCancel='.remove-widget'
+                        draggableCancel='.nodrag-widget'
+                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
                         rowHeight={30}
                         width={containerWidth}
                         compactType="null"
-                        isDraggable={true}
-                        isResizable={true}
+
                         preventCollision={false}
                         onLayoutChange={handleLayoutChange}
                     >
@@ -631,10 +642,11 @@ export default function CreateBento() {
                                 console.log(widget)
                                 console.log(layout)
 
-                                const { i, x, y, w, h, type, content, logo, title, caption, link } = widget;
+                                const {followers, i, x, y, w, h, type, spotify, content, logo, title, caption, link } = widget;
                                 console.log("Rendering widget with type:", type, "and content:", content, caption, link);
                                 return (
                                     <div
+                                        onClick={() => handleWidgetClick(i)}
                                         key={i}
                                         data-grid={{ i, x, y, w, h }}
                                         className={`box relative border rounded-[10px] overflow-visible ${(type === 'image' || type === 'video') ? 'p-0' : 'p-[12px]'} z-[10]`}
@@ -679,6 +691,7 @@ export default function CreateBento() {
                                                         rows={1}
                                                         data-id={i}
                                                         placeholder="Add caption"
+
                                                     />
                                                 </div>
                                             </div>
@@ -687,8 +700,8 @@ export default function CreateBento() {
                                             <div className="w-full h-full bg-gray-200">
                                                 <iframe
                                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.019692186117!2d144.96328!3d-37.816206!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0xf0727f760fe18b0!2sFederation%20Square%2C%20Melbourne%20VIC%203000%2C%20Australia!5e0!3m2!1sen!2sus!4v1623934389094!5m2!1sen!2sus"
-                                                    width="100%"
-                                                    height="100%"
+                                                    width="80%"
+                                                    height="80%"
                                                     style={{ border: 0 }}
                                                     allowFullScreen=""
                                                     loading="lazy"
@@ -696,7 +709,7 @@ export default function CreateBento() {
                                             </div>
                                         )}
                                         {type === 'link' && (
-                                            <Linkcomponent screenshot={widget?.screenshot} getLinkLogo={getLinkLogo} logo={logo} title={title} content={content} />
+                                            <Linkcomponent followers={followers}    {...(spotify ? { spotify: spotify } : {})} screenshot={widget?.screenshot} getLinkLogo={getLinkLogo} logo={logo} title={title} content={content} />
                                         )}
                                         {type === 'title' && (
                                             <div
@@ -727,17 +740,24 @@ export default function CreateBento() {
 
 
                                         <button
-                                            className="remove-widget lg:hidden block absolute top-[-20px] w-[30px] h-[30px]  justify-center items-center rounded-[100%] shadow-lg hover:bg-[#EFEFEFEF]  right-0  p-[6px] bg-white z-[9999]"
+                                            className="remove-widget nodrag-widget lg:hidden block absolute top-[-20px] w-[30px] h-[30px]  justify-center items-center rounded-[100%] shadow-lg hover:bg-[#EFEFEFEF]  right-0  p-[6px] bg-white z-[9999]"
                                             onClick={(e) => {
-                                                e.stopPropagation(); 
+
                                                 removeWidget(i);
                                             }}
-                                            onTouchStart={(e) => e.stopPropagation()} 
-                                            onTouchEnd={(e) => e.stopPropagation()} 
+
                                         >
                                             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6 1C5.44772 1 5 1.44772 5 2C5 2.55228 5.44772 3 6 3H12C12.5523 3 13 2.55228 13 2C13 1.44772 12.5523 1 12 1H6ZM2 4C1.44772 4 1 4.44772 1 5C1 5.55228 1.44772 6 2 6H3V14C3 15.6569 4.34315 17 6 17H12C13.6569 17 15 15.6569 15 14V6H16C16.5523 6 17 5.55228 17 5C17 4.44772 16.5523 4 16 4H2ZM5 14V6H13V14C13 14.5523 12.5523 15 12 15H6C5.44772 15 5 14.5523 5 14Z" fill="currentColor"></path></svg>
 
                                         </button>
+                                        {activeWidgetId === i && (
+                                            <button className='dragable lg:hidden flex justify-center items-center w-[20px] h-[20px] bg-black rounded-[100%] absolute bottom-[-15%] left-[50%] translate-x-[-50%] text-white'>
+                                                <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9.99985 2.99985C9.99985 2.44756 9.55213 1.99985 8.99985 1.99985C8.44756 1.99985 7.99985 2.44756 7.99985 2.99985V7.99985H2.99985C2.44756 7.99985 1.99985 8.44756 1.99985 8.99985C1.99985 9.55213 2.44756 9.99985 2.99985 9.99985H7.99985V14.9998C7.99985 15.5521 8.44756 15.9998 8.99985 15.9998C9.55213 15.9998 9.99985 15.5521 9.99985 14.9998V9.99985H14.9998C15.5521 9.99985 15.9998 9.55213 15.9998 8.99985C15.9998 8.44756 15.5521 7.99985 14.9998 7.99985H9.99985V2.99985Z" fill="currentColor"></path>
+                                                    
+                                                </svg>
+                                            </button>
+                                        )}
                                     </div>
                                 );
                             })}
@@ -746,7 +766,7 @@ export default function CreateBento() {
 
 
                 </div>
-                <div className='create-widget rounded-[10px] w-full shadow-2xl max-w-[500px] fixed bg-white flex p-[10px] z-[9]'>
+                <div className='create-widget justify-center rounded-[10px] w-full shadow-2xl max-w-[500px] fixed bg-white flex p-[10px] z-[9999999999]'>
                     <div className="relative inline-block">
                         <a
                             href="#"
@@ -808,7 +828,7 @@ export default function CreateBento() {
                             <span className=' w-[50px] text-center shadow-lg p-[2px] text-[8px] bg-white rounded-[20px] absolute top-[-120%] left-[-10px] '> Add Title</span>
                         </span>
                     </div>
-                    <p className='mx-[10px] my-0 text-[#EFEFEF]'>|</p>
+                    
 
                 </div>
                 {showPopup.visible && (
