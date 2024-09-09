@@ -58,10 +58,10 @@ if(followers){
 
         const actions = {
          youtube: /youtube\.com\/(c\/|@|results|user|channel)/,
-            instagram: /instagram\.com\//,
+            instagram: /^https:\/\/www\.instagram\.com\/[^\/]+\/?(?:\?.*)?$/,
             twitter: /x\.com\//,
             github: /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9-]+\/?$/,
-            spotify: /spotify\.com\//,
+            spotify: /^https:\/\/open\.spotify\.com\/(playlist|track|album)\/[^\/]+\/?$/,
             linkedin: /linkedin\.com\//,
             facebook: /facebook\.com\//,
             reddit: /reddit\.com\/r\//,
