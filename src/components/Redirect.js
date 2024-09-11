@@ -8,7 +8,7 @@ const Redirect = ({ children }) => {
     useEffect(() => {
         if (localStorage.getItem('user')) {
             let user=JSON.parse(localStorage.getItem('user'))
-            navigate(`/create-bento/${user.userName}`)
+            navigate(`/${user.userName}`)
         } 
     }, [navigate]);
 

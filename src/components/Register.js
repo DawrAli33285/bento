@@ -50,7 +50,7 @@ const registerNow=async()=>{
     try{
 let response=await axios.post(`${BASE_URL}/register`,state)
 console.log(response.data)
-navigate(`/create-bento/${state.userName}`)
+navigate(`/${state.userName}`)
     }catch(e){
 if(e?.response?.data?.error){
 toast.error(e?.response?.data?.error)
@@ -96,7 +96,7 @@ const socialRegister=async()=>{
 
 
 let responsetwo=await axios.post(`${BASE_URL}/socialRegister`,{email,userName:state.userName,profilePic})
-navigate(`/create-bento/${state.userName}`)
+navigate(`/${state.userName}`)
 }catch(e){
         if(e?.response?.data?.error){
             toast.error(e?.response?.data?.error)

@@ -33,6 +33,8 @@ export default function CreateBento() {
     const [uploadedMedia, setUploadedMedia] = useState(null);
     const [screenshot, setScreenshot] = useState('');
     const [invalidUserName, setInValidUserName] = useState(false)
+    const [selectedSpan, setSelectedSpan] = useState(null); // To track the selected span
+
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: async (acceptedFiles) => {
@@ -100,79 +102,84 @@ export default function CreateBento() {
 
 
     const addWidget = async (type, content = null) => {
-
         try {
-            const gridWidth = 6;
-
-
-            const occupiedSpaces = layout.reduce((acc, widget) => {
-                const widgetArea = [];
-                for (let x = widget.x; x < widget.x + widget.w; x++) {
-                    for (let y = widget.y; y < widget.y + widget.h; y++) {
-                        widgetArea.push({ x, y });
-                    }
-                }
-                return [...acc, ...widgetArea];
-            }, []);
-
-
-            let nextPosition = { x: 0, y: 0 };
-            let found = false;
-
-            for (let y = 0; !found; y++) {
-                for (let x = 0; x < gridWidth; x++) {
-                    if (!occupiedSpaces.some(space => space.x === x && space.y === y)) {
-                        nextPosition = { x, y };
-                        found = true;
-                        break;
-                    }
-                }
+          const gridWidth = 6;
+          const screenWidth = window.innerWidth; // Get current screen width
+          const isMobile = screenWidth <= 768; // Adjust this for your breakpoint logic
+      
+          // Occupied spaces logic (same as before)
+          const occupiedSpaces = layout.reduce((acc, widget) => {
+            const widgetArea = [];
+            for (let x = widget.x; x < widget.x + widget.w; x++) {
+              for (let y = widget.y; y < widget.y + widget.h; y++) {
+                widgetArea.push({ x, y });
+              }
             }
-
-            // Set widget size based on its type
-            let newWidget = {
-                i: `widget-${counter}-${uuidv4()}`,
-                x: nextPosition.x,
-                y: nextPosition.y,
-                w: type === 'text' ? 2 : 1,
-                h: type === 'map' ? 5 : (type === 'image' || type === 'video' || type === 'link') ? 4 : 2,
-                type: type,
-                content: content,
-                caption: null,
-                link: '#'
-            };
-
-            console.log("Adding new widget at position:", newWidget);
-            let token = JSON.parse(localStorage.getItem('user'))
-            console.log(token?.token)
-            let headers = {
-                headers: {
-                    authorization: `Bearer ${token?.token}`
-                }
-            };
-            if (type == "link") {
-                let logo = getLinkLogo(content)
-                newWidget = {
-                    ...newWidget,
-                    logo
-                }
+            return [...acc, ...widgetArea];
+          }, []);
+      
+          let nextPosition = { x: 0, y: 0 };
+          let found = false;
+      
+          // Find next available position logic (same as before)
+          for (let y = 0; !found; y++) {
+            for (let x = 0; x < gridWidth; x++) {
+              if (!occupiedSpaces.some(space => space.x === x && space.y === y)) {
+                nextPosition = { x, y };
+                found = true;
+                break;
+              }
             }
-
-            let response = await axios.post(`${BASE_URL}/create-bento`, newWidget, headers);
-            console.log("new widget final")
-            console.log(response)
-            setLayout([...layout, response.data.data]);
-            setCounter(counter + 1);
-
+          }
+      
+          // Define different sizes for desktop and mobile
+          const desktopSize = { w: 4, h: 4 }; // Default size for desktop
+          const mobileSize = { w: 2, h: 2 };  // Smaller size for mobile
+      
+          const newWidget = {
+            i: `widget-${counter}-${uuidv4()}`,
+            x: nextPosition.x,
+            y: nextPosition.y,
+            w: isMobile ? mobileSize.w : desktopSize.w,
+            h: isMobile ? mobileSize.h : desktopSize.h,
+            type: type,
+            content: content,
+            caption: null,
+            link: '#'
+          };
+      
+          // If widget type is 'link', get the logo
+          if (type === "link") {
+            let logo = getLinkLogo(content);
+            newWidget.logo = logo;
+          }
+      
+          console.log("Adding new widget at position:", newWidget);
+          let token = JSON.parse(localStorage.getItem('user'));
+          let headers = {
+            headers: {
+              authorization: `Bearer ${token?.token}`
+            }
+          };
+      
+          // Send request to create new widget
+          let response = await axios.post(`${BASE_URL}/create-bento`, newWidget, headers);
+          console.log("new widget final", response);
+      
+          // Update the layout
+          setLayout([...layout, response.data.data]);
+          setCounter(counter + 1);
+      
         } catch (error) {
-            console.log(error.message)
-            if (error?.response?.data?.error) {
-                toast.error(error?.response?.data?.error)
-            } else {
-                toast.error("Clinet error please try again")
-            }
+          console.error(error.message);
+          if (error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error);
+          } else {
+            toast.error("Client error, please try again");
+          }
         }
-    };
+      };
+      
     let navigate = useNavigate()
 
 
@@ -254,29 +261,24 @@ export default function CreateBento() {
 
 
     function getLinkLogo(content) {
-        // Add https:// if not already present
+
         if (!/^https?:\/\//i.test(content)) {
             content = `https://${content}`;
         }
 
         try {
-
             const domain = new URL(content).hostname;
 
-            return `https://www.google.com/s2/favicons?domain=${domain}`;
+            return `https://logo.clearbit.com/${domain}`;
         } catch (error) {
-            // If the URL is invalid, return the fallback SVG
-            return (
-                `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000">
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                <path d="M14.1625 18.4876L13.4417 19.2084C11.053 21.5971 7.18019 21.5971 4.79151 19.2084C2.40283 16.8198 2.40283 12.9469 4.79151 10.5583L5.51236 9.8374" stroke="#010204" stroke-width="1.5" stroke-linecap="round"></path>
-                <path d="M9.8374 14.1625L14.1625 9.8374" stroke="#010204" stroke-width="1.5" stroke-linecap="round"></path>
-                <path d="M9.8374 5.51236L10.5583 4.79151C12.9469 2.40283 16.8198 2.40283 19.2084 4.79151M18.4876 14.1625L19.2084 13.4417C20.4324 12.2177 21.0292 10.604 20.9988 9" stroke="#010204" stroke-width="1.5" stroke-linecap="round"></path>
-              </g>
-            </svg>`
-            );
+
+            return 'data:image/svg+xml;base64,' + btoa(`
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2"/>
+                    <line x1="8" y1="8" x2="16" y2="16" stroke="black" stroke-width="2"/>
+                    <line x1="16" y1="8" x2="8" y2="16" stroke="black" stroke-width="2"/>
+                </svg>
+            `);
         }
     }
 
@@ -454,7 +456,7 @@ export default function CreateBento() {
 
             let response = await axios.patch(`${BASE_URL}/updateProfile`, { userName: popupValue }, headers)
             console.log("UPDATE")
-            window.location.href = `/create-bento/${popupValue}`
+            window.location.href = `/${popupValue}`
 
         } catch (e) {
             if (e?.response?.data?.error) {
@@ -495,6 +497,16 @@ export default function CreateBento() {
             console.log(e.message)
         }
     }
+    const handleResize = (widgetId, width, height, spanIndex) => {
+        const updatedLayout = layout.map(item => {
+            if (item.i === widgetId) {
+                return { ...item, w: width, h: height };
+            }
+            return item;
+        });
+        setLayout(updatedLayout);
+        setSelectedSpan(spanIndex); // Set the selected span to change its style
+    };
     return (
         <>
             <ToastContainer />
@@ -626,7 +638,7 @@ export default function CreateBento() {
                         layout={layout}
                         draggableCancel='.nodrag-widget'
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-                        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+                        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 4 }}
                         rowHeight={30}
                         width={containerWidth}
                         compactType="null"
@@ -642,7 +654,7 @@ export default function CreateBento() {
                                 console.log(widget)
                                 console.log(layout)
 
-                                const {followers, i, x, y, w, h, type, spotify, content, logo, title, caption, link } = widget;
+                                const { followers, i, x, y, w, h, type, spotify, content, logo, title, caption, link } = widget;
                                 console.log("Rendering widget with type:", type, "and content:", content, caption, link);
                                 return (
                                     <div
@@ -657,7 +669,7 @@ export default function CreateBento() {
                                                 <img
                                                     src={content}
                                                     alt="User uploaded"
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover rounded-xl"
                                                 />
                                                 <div
                                                     className={`absolute bottom-0 p-[10px] w-full ${caption ? 'opacity-100' : 'opacity-0 hover:opacity-100'} transition-opacity duration-300`}
@@ -754,10 +766,38 @@ export default function CreateBento() {
                                             <button className='dragable lg:hidden flex justify-center items-center w-[20px] h-[20px] bg-black rounded-[100%] absolute bottom-[-15%] left-[50%] translate-x-[-50%] text-white'>
                                                 <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M9.99985 2.99985C9.99985 2.44756 9.55213 1.99985 8.99985 1.99985C8.44756 1.99985 7.99985 2.44756 7.99985 2.99985V7.99985H2.99985C2.44756 7.99985 1.99985 8.44756 1.99985 8.99985C1.99985 9.55213 2.44756 9.99985 2.99985 9.99985H7.99985V14.9998C7.99985 15.5521 8.44756 15.9998 8.99985 15.9998C9.55213 15.9998 9.99985 15.5521 9.99985 14.9998V9.99985H14.9998C15.5521 9.99985 15.9998 9.55213 15.9998 8.99985C15.9998 8.44756 15.5521 7.99985 14.9998 7.99985H9.99985V2.99985Z" fill="currentColor"></path>
-                                                    
+
                                                 </svg>
                                             </button>
                                         )}
+                                        <div class="absolute nodrag-widget size-widget bg-black bottom-2 left-1/2 hidden  w-[200px] rounded-[10px] translate-y-full -translate-x-1/2 flex-row justify-center items-center text-center p-[6px]">
+                                            <div className='flex justify-between p-[6px]'>
+                                                <span
+                                                    onClick={() => handleResize(i, 2, 4, 1)}
+                                                    className={`rounded-[6px] p-[6px]  ${selectedSpan == 1 ? 'bg-white text-black' : 'text-white'} font-bold hover:bg-white hover:text-black`}>
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.8 7H8.2C7.60695 7 7.28244 7.00156 7.04927 7.02061C7.03998 7.02136 7.0312 7.02213 7.0229 7.0229C7.02213 7.0312 7.02136 7.03998 7.02061 7.04927C7.00156 7.28244 7 7.60695 7 8.2V11.8C7 12.3931 7.00156 12.7176 7.02061 12.9507C7.02136 12.96 7.02213 12.9688 7.0229 12.9771C7.0312 12.9779 7.03998 12.9786 7.04927 12.9794C7.28244 12.9984 7.60695 13 8.2 13H11.8C12.3931 13 12.7176 12.9984 12.9507 12.9794C12.96 12.9786 12.9688 12.9779 12.9771 12.9771C12.9779 12.9688 12.9786 12.96 12.9794 12.9507C12.9984 12.7176 13 12.3931 13 11.8V8.2C13 7.60695 12.9984 7.28244 12.9794 7.04927C12.9786 7.03998 12.9779 7.0312 12.9771 7.0229C12.9688 7.02213 12.96 7.02136 12.9507 7.02061C12.7176 7.00156 12.3931 7 11.8 7ZM5.21799 6.09202C5 6.51984 5 7.0799 5 8.2V11.8C5 12.9201 5 13.4802 5.21799 13.908C5.40973 14.2843 5.71569 14.5903 6.09202 14.782C6.51984 15 7.0799 15 8.2 15H11.8C12.9201 15 13.4802 15 13.908 14.782C14.2843 14.5903 14.5903 14.2843 14.782 13.908C15 13.4802 15 12.9201 15 11.8V8.2C15 7.0799 15 6.51984 14.782 6.09202C14.5903 5.71569 14.2843 5.40973 13.908 5.21799C13.4802 5 12.9201 5 11.8 5H8.2C7.0799 5 6.51984 5 6.09202 5.21799C5.71569 5.40973 5.40973 5.71569 5.21799 6.09202Z" fill="currentColor"></path></svg>
+                                                </span>
+                                                <span
+                                                    onClick={() => handleResize(i, 3, 2, 2)}
+                                                    className={`rounded-[6px] p-[6px]  ${selectedSpan == 2 ? 'bg-white text-black' : 'text-white'} font-bold hover:bg-white hover:text-black`}>
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17 9H3C2.50669 9 2.23688 9.00108 2.04183 9.01439C2.03276 9.01501 2.02424 9.01564 2.01626 9.01626C2.01564 9.02424 2.01501 9.03276 2.01439 9.04183C2.00108 9.23688 2 9.50669 2 10C2 10.4933 2.00108 10.7631 2.01439 10.9582C2.01501 10.9672 2.01564 10.9758 2.01626 10.9837C2.02424 10.9844 2.03276 10.985 2.04183 10.9856C2.23688 10.9989 2.50669 11 3 11H17C17.4933 11 17.7631 10.9989 17.9582 10.9856C17.9672 10.985 17.9758 10.9844 17.9837 10.9837C17.9844 10.9758 17.985 10.9672 17.9856 10.9582C17.9989 10.7631 18 10.4933 18 10C18 9.50669 17.9989 9.23688 17.9856 9.04183C17.985 9.03276 17.9844 9.02424 17.9837 9.01626C17.9758 9.01564 17.9672 9.01501 17.9582 9.01439C17.7631 9.00108 17.4933 9 17 9ZM0.152241 8.23463C0 8.60218 0 9.06812 0 10C0 10.9319 0 11.3978 0.152241 11.7654C0.355229 12.2554 0.744577 12.6448 1.23463 12.8478C1.60218 13 2.06812 13 3 13H17C17.9319 13 18.3978 13 18.7654 12.8478C19.2554 12.6448 19.6448 12.2554 19.8478 11.7654C20 11.3978 20 10.9319 20 10C20 9.06812 20 8.60218 19.8478 8.23463C19.6448 7.74458 19.2554 7.35523 18.7654 7.15224C18.3978 7 17.9319 7 17 7H3C2.06812 7 1.60218 7 1.23463 7.15224C0.744577 7.35523 0.355229 7.74458 0.152241 8.23463Z" fill="currentColor"></path></svg>
+                                                </span>
+                                                <span
+                                                    onClick={() => handleResize(i, 3, 4, 3)}
+                                                    className={`rounded-[6px] p-[6px]  ${selectedSpan == 3 ? 'bg-white text-black' : 'text-white'} font-bold hover:bg-white hover:text-black`}>
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.2 7H4.8C3.92692 7 3.39239 7.00156 2.99247 7.03423C2.80617 7.04945 2.69345 7.06857 2.625 7.08469C2.59244 7.09236 2.57241 7.09879 2.56158 7.10265C2.55118 7.10636 2.54681 7.10858 2.54601 7.10899C2.35785 7.20487 2.20487 7.35785 2.10899 7.54601C2.10858 7.54681 2.10636 7.55118 2.10265 7.56158C2.09879 7.57241 2.09236 7.59244 2.08469 7.625C2.06857 7.69345 2.04945 7.80617 2.03423 7.99247C2.00156 8.39239 2 8.92692 2 9.8V10.2C2 11.0731 2.00156 11.6076 2.03423 12.0075C2.04945 12.1938 2.06857 12.3065 2.08469 12.375C2.09236 12.4076 2.09879 12.4276 2.10265 12.4384C2.10636 12.4488 2.10858 12.4532 2.10899 12.454C2.20487 12.6422 2.35785 12.7951 2.54601 12.891C2.54681 12.8914 2.55118 12.8936 2.56158 12.8973C2.57241 12.9012 2.59244 12.9076 2.625 12.9153C2.69345 12.9314 2.80617 12.9505 2.99247 12.9658C3.39239 12.9984 3.92692 13 4.8 13H15.2C16.0731 13 16.6076 12.9984 17.0075 12.9658C17.1938 12.9505 17.3065 12.9314 17.375 12.9153C17.4076 12.9076 17.4276 12.9012 17.4384 12.8973C17.4488 12.8936 17.4532 12.8914 17.454 12.891C17.6422 12.7951 17.7951 12.6422 17.891 12.454C17.8914 12.4532 17.8936 12.4488 17.8973 12.4384C17.9012 12.4276 17.9076 12.4076 17.9153 12.375C17.9314 12.3065 17.9505 12.1938 17.9658 12.0075C17.9984 11.6076 18 11.0731 18 10.2V9.8C18 8.92692 17.9984 8.39239 17.9658 7.99247C17.9505 7.80617 17.9314 7.69345 17.9153 7.625C17.9076 7.59244 17.9012 7.57241 17.8973 7.56158C17.8936 7.55118 17.8914 7.54681 17.891 7.54601C17.7951 7.35785 17.6422 7.20487 17.454 7.10899C17.4532 7.10858 17.4488 7.10636 17.4384 7.10265C17.4276 7.09879 17.4076 7.09236 17.375 7.08469C17.3065 7.06857 17.1938 7.04945 17.0075 7.03423C16.6076 7.00156 16.0731 7 15.2 7ZM0.32698 6.63803C0 7.27976 0 8.11984 0 9.8V10.2C0 11.8802 0 12.7202 0.32698 13.362C0.614601 13.9265 1.07354 14.3854 1.63803 14.673C2.27976 15 3.11984 15 4.8 15H15.2C16.8802 15 17.7202 15 18.362 14.673C18.9265 14.3854 19.3854 13.9265 19.673 13.362C20 12.7202 20 11.8802 20 10.2V9.8C20 8.11984 20 7.27976 19.673 6.63803C19.3854 6.07354 18.9265 5.6146 18.362 5.32698C17.7202 5 16.8802 5 15.2 5H4.8C3.11984 5 2.27976 5 1.63803 5.32698C1.07354 5.6146 0.614601 6.07354 0.32698 6.63803Z" fill="currentColor"></path></svg>
+                                                </span>
+                                                <span
+                                                    onClick={() => handleResize(i, 3, 6, 4)}
+                                                    className={`rounded-[6px] p-[6px]  ${selectedSpan == 4 ? 'bg-white text-black' : 'text-white'} font-bold hover:bg-white hover:text-black`}>
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.2 2H9.8C8.92692 2 8.39239 2.00156 7.99247 2.03423C7.80617 2.04945 7.69345 2.06857 7.625 2.08469C7.59244 2.09236 7.57241 2.09879 7.56158 2.10265C7.55118 2.10636 7.54681 2.10858 7.54601 2.10899C7.35785 2.20487 7.20487 2.35785 7.10899 2.54601C7.10858 2.54681 7.10636 2.55118 7.10265 2.56158C7.09879 2.57241 7.09236 2.59244 7.08469 2.625C7.06857 2.69345 7.04945 2.80617 7.03423 2.99247C7.00156 3.39239 7 3.92692 7 4.8V15.2C7 16.0731 7.00156 16.6076 7.03423 17.0075C7.04945 17.1938 7.06857 17.3065 7.08469 17.375C7.09236 17.4076 7.09879 17.4276 7.10265 17.4384C7.10636 17.4488 7.10858 17.4532 7.10899 17.454C7.20487 17.6422 7.35785 17.7951 7.54601 17.891C7.54681 17.8914 7.55118 17.8936 7.56158 17.8973C7.57241 17.9012 7.59244 17.9076 7.625 17.9153C7.69345 17.9314 7.80617 17.9505 7.99247 17.9658C8.39239 17.9984 8.92692 18 9.8 18H10.2C11.0731 18 11.6076 17.9984 12.0075 17.9658C12.1938 17.9505 12.3065 17.9314 12.375 17.9153C12.4076 17.9076 12.4276 17.9012 12.4384 17.8973C12.4488 17.8936 12.4532 17.8914 12.454 17.891C12.6422 17.7951 12.7951 17.6422 12.891 17.454C12.8914 17.4532 12.8936 17.4488 12.8973 17.4384C12.9012 17.4276 12.9076 17.4076 12.9153 17.375C12.9314 17.3065 12.9505 17.1938 12.9658 17.0075C12.9984 16.6076 13 16.0731 13 15.2V4.8C13 3.92692 12.9984 3.39239 12.9658 2.99247C12.9505 2.80617 12.9314 2.69345 12.9153 2.625C12.9076 2.59244 12.9012 2.57241 12.8973 2.56158C12.8936 2.55118 12.8914 2.54681 12.891 2.54601C12.7951 2.35785 12.6422 2.20487 12.454 2.10899C12.4532 2.10858 12.4488 2.10636 12.4384 2.10265C12.4276 2.09879 12.4076 2.09236 12.375 2.08469C12.3065 2.06857 12.1938 2.04945 12.0075 2.03423C11.6076 2.00156 11.0731 2 10.2 2ZM5.32698 1.63803C5 2.27976 5 3.11984 5 4.8V15.2C5 16.8802 5 17.7202 5.32698 18.362C5.6146 18.9265 6.07354 19.3854 6.63803 19.673C7.27976 20 8.11984 20 9.8 20H10.2C11.8802 20 12.7202 20 13.362 19.673C13.9265 19.3854 14.3854 18.9265 14.673 18.362C15 17.7202 15 16.8802 15 15.2V4.8C15 3.11984 15 2.27976 14.673 1.63803C14.3854 1.07354 13.9265 0.614601 13.362 0.32698C12.7202 0 11.8802 0 10.2 0H9.8C8.11984 0 7.27976 0 6.63803 0.32698C6.07354 0.614601 5.6146 1.07354 5.32698 1.63803Z" fill="currentColor"></path></svg>
+                                                </span>
+                                                <span
+                                                    onClick={() => handleResize(i, 4, 5, 5)}
+                                                    className={`rounded-[6px] p-[6px]  ${selectedSpan == 5 ? 'bg-white text-black' : 'text-white'} font-bold hover:bg-white hover:text-black`}>
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.6 2H6.4C5.24689 2 4.50235 2.00156 3.93567 2.04785C3.39235 2.09225 3.19091 2.1676 3.09202 2.21799C2.71569 2.40973 2.40973 2.71569 2.21799 3.09202C2.1676 3.19091 2.09225 3.39235 2.04785 3.93567C2.00156 4.50235 2 5.24689 2 6.4V13.6C2 14.7531 2.00156 15.4977 2.04785 16.0643C2.09225 16.6077 2.1676 16.8091 2.21799 16.908C2.40973 17.2843 2.71569 17.5903 3.09202 17.782C3.19091 17.8324 3.39235 17.9078 3.93567 17.9521C4.50235 17.9984 5.24689 18 6.4 18H13.6C14.7531 18 15.4977 17.9984 16.0643 17.9521C16.6077 17.9078 16.8091 17.8324 16.908 17.782C17.2843 17.5903 17.5903 17.2843 17.782 16.908C17.8324 16.8091 17.9078 16.6077 17.9521 16.0643C17.9984 15.4977 18 14.7531 18 13.6V6.4C18 5.24689 17.9984 4.50235 17.9521 3.93567C17.9078 3.39235 17.8324 3.19091 17.782 3.09202C17.5903 2.71569 17.2843 2.40973 16.908 2.21799C16.8091 2.1676 16.6077 2.09225 16.0643 2.04785C15.4977 2.00156 14.7531 2 13.6 2ZM0.435974 2.18404C0 3.03969 0 4.15979 0 6.4V13.6C0 15.8402 0 16.9603 0.435974 17.816C0.819467 18.5686 1.43139 19.1805 2.18404 19.564C3.03969 20 4.15979 20 6.4 20H13.6C15.8402 20 16.9603 20 17.816 19.564C18.5686 19.1805 19.1805 18.5686 19.564 17.816C20 16.9603 20 15.8402 20 13.6V6.4C20 4.15979 20 3.03969 19.564 2.18404C19.1805 1.43139 18.5686 0.819467 17.816 0.435974C16.9603 0 15.8402 0 13.6 0H6.4C4.15979 0 3.03969 0 2.18404 0.435974C1.43139 0.819467 0.819467 1.43139 0.435974 2.18404Z" fill="currentColor"></path></svg>                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 );
                             })}
@@ -828,7 +868,7 @@ export default function CreateBento() {
                             <span className=' w-[50px] text-center shadow-lg p-[2px] text-[8px] bg-white rounded-[20px] absolute top-[-120%] left-[-10px] '> Add Title</span>
                         </span>
                     </div>
-                    
+
 
                 </div>
                 {showPopup.visible && (

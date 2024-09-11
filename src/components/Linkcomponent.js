@@ -60,7 +60,7 @@ if(followers){
          youtube: /youtube\.com\/(c\/|@|results|user|channel)/,
             instagram: /^https:\/\/www\.instagram\.com\/[^\/]+\/?(?:\?.*)?$/,
             twitter: /x\.com\//,
-            github: /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9-]+\/?$/,
+            github: /^https:\/\/(www\.)?github\.com\/[a-zA-Z0-9-]+(?:\?.*)?$/,
             spotify: /^https:\/\/open\.spotify\.com\/(playlist|track|album)\/[^\/]+\/?$/,
             linkedin: /linkedin\.com\//,
             facebook: /facebook\.com\//,
@@ -86,28 +86,28 @@ if(followers){
 
                     case 'youtube':
                         return (
-                            <button onClick={handleButtonClick} className="action-button youtube-btn">
+                            <button style={{padding:'7px 14px'}} onClick={handleButtonClick} className="action-button youtube-btn rounded-full">
  
                                 Subscribe ({formatNumber(followersRef?.current)})
                             </button>
                         );
                     case 'instagram':
                         return (
-                            <button onClick={handleButtonClick} className="action-button instagram-btn">
+                            <button style={{padding:'7px 14px'}} onClick={handleButtonClick} className="action-button instagram-btn rounded-lg">
 
                                 Follow ({formatNumber(followersRef?.current)})
                             </button>
                         );
                     case 'spotify':
                         return (
-                            <button onClick={handleButtonClick} className="action-button font-bold text-xs text-white py-[7px] px-[14px]  rounded-[8px] bg-green-600">
+                            <button onClick={handleButtonClick} className="action-button gap-1 font-bold text-xs text-white py-[7px] px-[16px]  rounded-[8px] bg-[#1ED760]">
 
                                 Play
                             </button>
                         );
                     case 'github':
                         return (
-                            <button onClick={handleButtonClick} className="action-button font-bold text-xs text-white py-[7px] px-[14px]  rounded-[8px] bg-green-600">
+                            <button onClick={handleButtonClick} className="github">
 
                                 Follow
                             </button>
@@ -167,11 +167,11 @@ if(followers){
                 <a href={content} target="_blank" rel="noreferrer" className="linkimg w-[50px] flex" >
                     <img src={logo ? logo : getLinkLogo(content)} />
                 </a>
-                <div className="flex justify-end items-center">
+                <div  className="flex items-center justify-evenly">
                     {getActionButton()}
                 </div>
             </div>
-            <p>
+            <p className=" text-black">
                 {titleRef.current ? titleRef.current : metadata?.title}
             </p>
             {loading ? (
@@ -187,7 +187,7 @@ if(followers){
                             return (
                                 <div
                                     key={i.toString()}
-                                    className="w-full h-[100px] rounded-[20px] overflow-hidden" 
+                                    className={`w-full ${screenshotRef.current?.includes(',')?'h-[100px]':'h-[100%]'} rounded-[20px] overflow-hidden`}
                                 >
                                     <img
                                         onError={() => console.log(`Failed to load image: ${val}`)}
@@ -231,9 +231,7 @@ if(followers){
                             </div>
                         );
                     })}
-                    <div className="text-sm text-gray-500 mt-2">
-                        {isPlaying ? "Playing..." : "Paused"}
-                    </div>
+                  
                 </div>
             ) : null}
 

@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/create-bento/:userName",
+    path: "/:userName",
     element: (
       <Middleware>
         <CreateBento />

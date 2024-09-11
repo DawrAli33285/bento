@@ -90,7 +90,7 @@ const loginNow=async()=>{
 try{
 let response=await axios.post(`${BASE_URL}/login`,state)
 localStorage.setItem('user',JSON.stringify(response.data))
-navigate(`/create-bento/${response?.data?.userName}`)
+navigate(`/${response?.data?.userName}`)
 }catch(e){
 if(e?.response?.data?.error){
 toast.error(e?.response?.data?.error)
@@ -130,7 +130,7 @@ useEffect(() => {
     let response=await axios.post(`${BASE_URL}/socialLogin`,{email})
   
     localStorage.setItem('user',JSON.stringify(response.data))
-    navigate(`/create-bento/${response?.data?.userName}`)
+    navigate(`/${response?.data?.userName}`)
     } catch (error) {
         console.log("ERROR")
        
